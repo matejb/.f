@@ -1,0 +1,62 @@
+RUNNING='local'
+
+# colors
+# 0 – Black
+# 1 – Red
+# 2 – Green
+# 3 – Yellow
+# 4 – Blue
+# 5 – Magenta
+# 6 – Cyan	
+# 7 – White
+
+RST=$(tput sgr0)
+Red=$(tput setaf 1)
+Green=$(tput setaf 2)
+Yellow=$(tput setaf 3)
+Blue=$(tput setaf 4)
+Magenta=$(tput setaf 5)
+Cyan=$(tput setaf 6)
+White=$(tput setaf 7)
+
+# costum color scheme for prompt
+if [ $RUNNING == 'local' ]; then
+    PS1='\[$Yellow\]\u\[$Green\]@\[$White\]\h\[$Green\]:\[$Yellow\]\W/\[$Green\]\$\[$RST\] '
+fi
+if [ $RUNNING == 'remote' ]; then
+    PS1='\[$Yellow\]\u\[$Green\]@\[$Red\]\h\[$Green\]:\[$Yellow\]\W/\[$Green\]\$\[$RST\] '
+fi
+
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h \a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# aliases
+
+alias ll='ls -lha --color=auto'
+
+alias cd='cd -P'
+
+alias mkdir='mkdir -pv'
+
+if [ $UID -ne 0 ]; then
+   alias apt-get='sudo apt-get'
+   alias reboot='sudo reboot'
+   alias poweroff='sudo /sbin/poweroff'
+fi
+
+alias ..='cd ..'
+alias .2='cd ../../'
+alias .3='cd ../../../'
+alias .4='cd ../../../../'
+alias .5='cd ../../../../../'
+
+alias c='clear'
+
+alias dc='svn diff | colordiff'
