@@ -9,23 +9,32 @@
 ;; selection
 (delete-selection-mode 1)
 
+;; tab-width & mode
+(setq tab-width 4 indent-tabs-mode 1)
+
 ;; expand region
 (define-key global-map "\M-q" 'er/expand-region)
 
+;; comment-or-uncomment-region
+(define-key global-map "\M-d" 'comment-or-uncomment-region)
+
+;; dir moode options
+(setq dired-listing-switches "-alh")
+
 ;; html
-(add-hook 'html-mode-hook
-          (lambda ()
-            (setq tab-width 2 indent-tabs-mode 1)))
+;; (add-hook 'html-mode-hook
+;;           (lambda ()
+;;             (setq tab-width 2 indent-tabs-mode 1)))
 
-;; web-mode
-(add-hook 'web-mode-hook
-          (lambda ()
-            (setq tab-width 2 indent-tabs-mode 1)))
+;; ;; web-mode
+;; (add-hook 'web-mode-hook
+;;           (lambda ()
+;;             (setq tab-width 2 indent-tabs-mode 1)))
 
-;; smarty
-(add-hook 'smarty-mode-hook
-          (lambda ()
-            (setq tab-width 2 indent-tabs-mode 1)))
+;; ;; smarty
+;; (add-hook 'smarty-mode-hook
+;;           (lambda ()
+;;             (setq tab-width 2 indent-tabs-mode 1)))
 
 ;; smart-beginning-of-line
 (load "~/.emacs.d/private/local/general/packages/smart-beginning-of-line.el")
@@ -45,3 +54,6 @@
 
 ;; pretty-print-xml-region
 (load "~/.emacs.d/private/local/general/packages/pretty-print-xml-region.el")
+
+;; sql-indent-string
+(load "~/.emacs.d/private/local/general/packages/sql-indent-string.el")
