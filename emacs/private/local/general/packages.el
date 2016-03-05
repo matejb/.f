@@ -17,9 +17,9 @@
          :fetcher url
          :url "https://www.emacswiki.org/emacs/download/cursor-chg.el")
 
-        (sql-indent
+        (expand-region
          :fetcher github
-         :repo "bsvingen/sql-indent")
+         :repo "magnars/expand-region.el")
 
         ))
 
@@ -49,8 +49,8 @@
     (change-cursor-mode 1) ; Turn on change for overwrite, read-only, and input mode
     :config))
 
-(defun general/init-sql-indent ()
-  (use-package sql-indent
+(defun general/init-expand-region ()
+  (use-package expand-region
     :defer t
     :init
     :config))

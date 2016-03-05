@@ -55,5 +55,8 @@
 ;; pretty-print-xml-region
 (load "~/.emacs.d/private/local/general/packages/pretty-print-xml-region.el")
 
+;; sql-indent
+(load "~/.emacs.d/private/local/general/packages/sql-indent.el")
+
 ;; sql-indent-string
 (load "~/.emacs.d/private/local/general/packages/sql-indent-string.el")
