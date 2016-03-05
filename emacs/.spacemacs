@@ -39,21 +39,28 @@ values."
      html
      javascript
      sql
+
+     ;; personal layers
      general
+     phpplus
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+									  (ac-php)
+									  )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+									;; flycheck
+									)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
    dotspacemacs-delete-orphan-packages t))
 
-(defun dotspacemacs/init ()
+(defun dotspacemacsx/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
 before layers configuration.
@@ -244,6 +251,13 @@ It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
   (desktop-save-mode 1)
+
+  (add-hook 'php-mode-hook
+			'(lambda ()
+			   (require 'ac-php-company)
+			   (company-mode t)
+			   (add-to-list 'company-backends 'company-ac-php-backend )))
+
   )
 
 (defun dotspacemacs/user-config ()
