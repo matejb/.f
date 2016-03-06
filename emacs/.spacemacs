@@ -49,7 +49,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-									  (ac-php)
+									  ;; (ac-php)
 									  )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
@@ -250,13 +250,8 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
-  (desktop-save-mode 1)
 
-  (add-hook 'php-mode-hook
-			'(lambda ()
-			   (require 'ac-php-company)
-			   (company-mode t)
-			   (add-to-list 'company-backends 'company-ac-php-backend )))
+  (desktop-save-mode 1)
 
   )
 

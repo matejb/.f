@@ -18,6 +18,9 @@
 ;; comment-or-uncomment-region
 (define-key global-map "\M-d" 'comment-or-uncomment-region)
 
+;; helm-imenu
+(global-set-key (kbd "\C-c m") 'helm-imenu)
+
 ;; dir moode options
 (setq dired-listing-switches "-alh")
 
