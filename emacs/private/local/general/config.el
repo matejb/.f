@@ -46,7 +46,7 @@
 
 ;; duplicate-current-line-or-region
 (load "~/.emacs.d/private/local/general/packages/duplicate-current-line-or-region.el")
-(define-key global-map "\C-d" 'duplicate-current-line-or-region)
+(global-set-key (kbd "\C-c d") 'duplicate-current-line-or-region)
 
 ;; copy-file-name-to-clipboard
 (load "~/.emacs.d/private/local/general/packages/copy-file-name-to-clipboard.el")

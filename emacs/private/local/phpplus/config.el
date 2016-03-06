@@ -7,3 +7,4 @@
 ;; variables
 
 (setq flycheck-phpcs-standard "~/.composer/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/PSR2/ruleset.xml")
+
