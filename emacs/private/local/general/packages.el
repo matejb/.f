@@ -21,11 +21,11 @@
          :fetcher github
          :repo "magnars/expand-region.el")
 
-        (aggressive-indent)
+        ;; (aggressive-indent)
 
         ;; exclude list
         
-        (flyspell :excluded t)
+        ;; (flyspell :excluded t)
 
         ))
 
@@ -61,9 +61,9 @@
     :init
     :config))
 
-(defun general/init-aggressive-indent ()
-  (use-package aggressive-indent
-    :defer t
-    :init
-    (global-aggressive-indent-mode 1)
-    :config))
+;; (defun general/init-aggressive-indent ()
+;;   (use-package aggressive-indent
+;;     :defer t
+;;     :init
+;;     (global-aggressive-indent-mode 1)
+;;     :config))
