@@ -6,6 +6,9 @@
 
 ;; variables
 
+;; line numbers
+(linum-mode 1)
+
 ;; selection
 (delete-selection-mode 1)
 
