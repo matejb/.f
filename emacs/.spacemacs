@@ -28,7 +28,7 @@ values."
      emacs-lisp
      git
      markdown
-	 yaml
+     yaml
      ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -44,23 +44,24 @@ values."
      ;; personal layers
      general
      phpplus
+     apache
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-									  ;; (ac-php)
-									  (edit-server)
-									  )
-   ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '(
-									;; flycheck
-									)
-   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
-   ;; are declared in a layer which is not a member of
-   ;; the list `dotspacemacs-configuration-layers'. (default t)
-   dotspacemacs-delete-orphan-packages t))
+                                      ;; (ac-php)
+                                      ;; edit-server
+   )
+  ;; A list of packages and/or extensions that will not be install and loaded.
+  dotspacemacs-excluded-packages '(
+                                   ;; php-extras
+                                   )
+  ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
+  ;; are declared in a layer which is not a member of
+  ;; the list `dotspacemacs-configuration-layers'. (default t)
+  dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacsx/init ()
   "Initialization function.
@@ -244,7 +245,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup changed
    ))
 
 (defun dotspacemacs/user-init ()
@@ -268,3 +269,16 @@ layers configuration. You are free to put any user code."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values (quote ((setq-default indent-tabs-mode t)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
