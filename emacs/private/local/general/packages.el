@@ -23,6 +23,10 @@
 
         ;; (aggressive-indent)
 
+        (ws-butler
+         :fetcher url
+         :url "https://raw.githubusercontent.com/lewang/ws-butler/master/ws-butler.el")
+
         ;; exclude list
         
         ;; (flyspell :excluded t)
@@ -57,9 +61,13 @@
 
 (defun general/init-expand-region ()
   (use-package expand-region
+    :defer t))
+
+(defun general/init-ws-butler ()
+  (use-package ws-butler
     :defer t
     :init
-    :config))
+    (ws-butler-mode 1)))
 
 ;; (defun general/init-aggressive-indent ()
 ;;   (use-package aggressive-indent

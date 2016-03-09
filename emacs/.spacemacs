@@ -265,6 +265,10 @@ layers configuration. You are free to put any user code."
 
   'general/init-global-config
 
+  (setq powerline-default-separator 'arrow)
+
+  (setq spacemacs-show-trailing-whitespace nil)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
