@@ -6,6 +6,11 @@
 
 ;; variables
 
+;; full filename
+(setq frame-title-format
+      (list (format "emacs %s %%S: %%j " (system-name))
+            '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+
 ;; line numbers
 (linum-mode 1)
 
