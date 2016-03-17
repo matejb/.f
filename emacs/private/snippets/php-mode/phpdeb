@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: PHP debug
+# key: phpdeb
+# --
+echo __FILE__ . '@' . __LINE__ . "<br>\n";
+echo '<pre>';
+var_dump($1);
+echo '</pre>';
+$0
