@@ -12,6 +12,7 @@
         (php-mode)
         (company)
         (ac-php)
+        (smarty-mode)
 
         ))
 
@@ -28,4 +29,8 @@
     (global-set-key (kbd "\C-c r") 'ac-php-location-stack-back)
     :config
     ))
+
+(defun phpplus/init-smarty-mode ()
+  (use-package smarty-mode
+    :defer t))
 
