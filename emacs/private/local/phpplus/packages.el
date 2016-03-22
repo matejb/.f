@@ -13,6 +13,7 @@
         (company)
         (ac-php)
         (smarty-mode)
+        (php-refactor-mode)
 
         ))
 
@@ -32,5 +33,9 @@
 
 (defun phpplus/init-smarty-mode ()
   (use-package smarty-mode
+    :defer t))
+
+(defun phpplus/init-php-refactor-mode ()
+  (use-package php-refactor-mode
     :defer t))
 
