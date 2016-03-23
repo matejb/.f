@@ -12,7 +12,7 @@
             '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; line numbers
-(linum-mode 1)
+;; (linum-mode 1)
 
 ;; selection
 (delete-selection-mode 1)

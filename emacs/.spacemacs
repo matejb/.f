@@ -40,6 +40,7 @@ values."
      html
      javascript
      sql
+     go
 
      ;; personal layers
      general
