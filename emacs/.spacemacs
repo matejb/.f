@@ -53,7 +53,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
                                       ;; (ac-php)
-                                      ;; edit-server
+                                      edit-server
    )
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
@@ -269,6 +269,11 @@ layers configuration. You are free to put any user code."
   (setq powerline-default-separator 'arrow)
 
   (setq spacemacs-show-trailing-whitespace nil)
+
+  ;; (when (locate-library "edit-server")
+  ;;   (require 'edit-server)
+  ;;   (setq edit-server-new-frame nil)
+  ;;   (edit-server-start))
 
   )
 
