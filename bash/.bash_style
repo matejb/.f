@@ -1,5 +1,26 @@
 RUNNING='local'
 
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	      # We have color support; assume it's compliant with Ecma-48
+	      # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	      # a case would tend to support setf rather than setaf.)
+	      color_prompt=yes
+    else
+	      color_prompt=
+    fi
+fi
+
 # colors
 # 0 – Black
 # 1 – Red
@@ -19,12 +40,12 @@ Magenta=$(tput setaf 5)
 Cyan=$(tput setaf 6)
 White=$(tput setaf 7)
 
-# costum color scheme for prompt
-if [ $RUNNING == 'local' ]; then
-    PS1='\[$Yellow\]\u\[$Green\]@\[$White\]\h\[$Green\]:\[$Yellow\]\W/\[$Green\]\$\[$RST\] '
+# custom color scheme for prompt
+if [ "$color_prompt" = yes -a $RUNNING == 'local' ]; then
+    PS1='\[$Yellow\]\u\[$Green\]@\[$White\]\h\[$Green\]:\[$Yellow\]\W/\[$Magenta\]$(__git_ps1 " [%s] ")\[$Green\]\$\[$RST\] '
 fi
-if [ $RUNNING == 'remote' ]; then
-    PS1='\[$Yellow\]\u\[$Green\]@\[$Red\]\h\[$Green\]:\[$Yellow\]\W/\[$Green\]\$\[$RST\] '
+if [ "$color_prompt" = yes -a $RUNNING == 'remote' ]; then
+    PS1='\[$Yellow\]\u\[$Green\]@\[$Red\]\h\[$Green\]:\[$Yellow\]\W/\[$Magenta\]$(__git_ps1 " [%s] ")\[$Green\]\$\[$RST\] '
 fi
 
 
@@ -59,4 +80,4 @@ alias .5='cd ../../../../../'
 
 alias c='clear'
 
-alias dc='svn diff | colordiff'
+# alias dc='svn diff | colordiff'
