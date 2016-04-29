@@ -46,6 +46,7 @@ values."
      general
      phpplus
      apache
+     goplus
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -269,6 +270,8 @@ layers configuration. You are free to put any user code."
   (setq powerline-default-separator 'arrow)
 
   (setq spacemacs-show-trailing-whitespace nil)
+
+  (global-set-key (kbd "C-c C-t") 'yas-expand)
 
   ;; (when (locate-library "edit-server")
   ;;   (require 'edit-server)
