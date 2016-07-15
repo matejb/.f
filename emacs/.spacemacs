@@ -55,6 +55,7 @@ values."
    dotspacemacs-additional-packages '(
                                       ;; (ac-php)
                                       edit-server
+                                      owdriver
    )
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
@@ -272,6 +273,10 @@ layers configuration. You are free to put any user code."
   (setq spacemacs-show-trailing-whitespace nil)
 
   (global-set-key (kbd "C-c C-t") 'yas-expand)
+
+  (require 'owdriver)
+  (owdriver-define-command isearch-forward         t (isearch-forward))
+  (owdriver-define-command isearch-backward        t (isearch-backward))
 
   ;; (when (locate-library "edit-server")
   ;;   (require 'edit-server)
