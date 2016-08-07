@@ -29,7 +29,7 @@ values."
      git
      markdown
      yaml
-     ;; org
+     org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -259,6 +259,8 @@ in `dotspacemacs/user-config'."
 
   (desktop-save-mode 1)
 
+  (org-agenda-files "~/Dropbox/emacs/org/agenda.dir")
+
   )
 
 (defun dotspacemacs/user-config ()
@@ -292,6 +294,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/Dropbox/emacs/org/agenda/todo.org")))
  '(safe-local-variable-values (quote ((setq-default indent-tabs-mode t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
