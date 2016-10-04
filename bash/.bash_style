@@ -81,3 +81,6 @@ alias .5='cd ../../../../../'
 alias c='clear'
 
 # alias dc='svn diff | colordiff'
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.f/bash/.fzf_extra ] && source ~/.f/bash/.fzf_extra

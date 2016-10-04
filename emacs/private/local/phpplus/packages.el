@@ -17,10 +17,10 @@
 
         ))
 
-(when (configuration-layer/layer-usedp 'auto-completion)
-  (defun php/post-init-php-mode ()
-    (require 'ac-php-company)
-    (add-to-list 'company-backends 'company-ac-php-backend)))
+;; (when (configuration-layer/layer-usedp 'auto-completion)
+;;   (defun php/post-init-php-mode ()
+;;     (require 'ac-php-company)
+;;     (add-to-list 'company-backends 'company-ac-php-backend)))
 
 (defun phpplus/init-ac-php ()
   (use-package ac-php
