@@ -46,7 +46,7 @@ values."
      general
      phpplus
      apache
-     goplus
+     ;; goplus
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -56,6 +56,9 @@ values."
                                       ;; (ac-php)
                                       edit-server
                                       owdriver
+                                      flycheck-gometalinter
+                                      string-inflection
+                                      gotest
    )
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
@@ -259,8 +262,6 @@ in `dotspacemacs/user-config'."
 
   (desktop-save-mode 1)
 
-  (org-agenda-files "~/Dropbox/emacs/org/agenda.dir")
-
   )
 
 (defun dotspacemacs/user-config ()
@@ -276,6 +277,8 @@ layers configuration. You are free to put any user code."
 
   (global-set-key (kbd "C-c C-t") 'yas-expand)
 
+  (org-agenda-files "~/Dropbox/emacs/org/agenda.dir")
+
   (require 'owdriver)
   (owdriver-define-command isearch-forward         t (isearch-forward))
   (owdriver-define-command isearch-backward        t (isearch-backward))
@@ -284,6 +287,35 @@ layers configuration. You are free to put any user code."
   ;;   (require 'edit-server)
   ;;   (setq edit-server-new-frame nil)
   ;;   (edit-server-start))
+
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (add-to-list 'yas-snippet-dirs "/home/matej/.f/emacs/private/snippets/go-mode")
+  ;;(go :variables go-tab-width 4)
+
+  (setq tramp-default-method "ssh")
+
+  ;; skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
+  (setq flycheck-gometalinter-vendor t)
+  ;; only run fast linters
+  (setq flycheck-gometalinter-fast t)
+  ;; use in tests files
+  (setq flycheck-gometalinter-test t)
+  ;; disable linters
+  (setq flycheck-gometalinter-disable-linters '("gotype" "gocyclo"))
+  ;; Only enable selected linters
+  ;; (setq flycheck-gometalinter-disable-all t)
+  ;; (setq flycheck-gometalinter-enable-linters '("golint"))
+  ;; Set different deadline (default: 5s)
+  (setq flycheck-gometalinter-deadline "10s")
+
+  (defun close-and-kill-next-pane ()
+    "If there are multiple windows, then close the other pane and kill the buffer in it also."
+    (interactive)
+    (other-window 1)
+    (kill-this-buffer)
+    (if (not (one-window-p))
+        (delete-window)))
 
   )
 
