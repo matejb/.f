@@ -60,7 +60,7 @@ esac
 
 # aliases
 
-alias ll='ls -lha --color=auto'
+alias ll='ls -lha'
 
 alias cd='cd -P'
 

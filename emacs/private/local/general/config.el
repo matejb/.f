@@ -35,6 +35,7 @@
 ;; smart-beginning-of-line
 (load "~/.emacs.d/private/local/general/packages/smart-beginning-of-line.el")
 (define-key global-map [home] 'smart-beginning-of-line)
+(define-key global-map [end] 'end-of-line)
 
 ;; duplicate-current-line-or-region
 (load "~/.emacs.d/private/local/general/packages/duplicate-current-line-or-region.el")

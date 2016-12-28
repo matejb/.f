@@ -60,6 +60,7 @@ values."
                                       string-inflection
                                       gotest
                                       restclient
+                                      midnight
    )
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
@@ -129,7 +130,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -203,7 +204,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -272,11 +273,11 @@ layers configuration. You are free to put any user code."
 
   'general/init-global-config
 
-  (setq powerline-default-separator 'arrow)
+  (setq powerline-default-separator 'nil)
 
   (setq spacemacs-show-trailing-whitespace nil)
 
-  (global-set-key (kbd "C-c C-t") 'yas-expand)
+  (global-set-key (kbd "M-a") 'yas-expand)
 
   (org-agenda-files "~/Dropbox/emacs/org/agenda.dir")
 
@@ -310,6 +311,9 @@ layers configuration. You are free to put any user code."
   ;; Set different deadline (default: 5s)
   (setq flycheck-gometalinter-deadline "10s")
 
+  (setq mac-right-option-modifier nil)
+  (setq global-auto-revert-mode nil)
+
   (defun close-and-kill-next-pane ()
     "If there are multiple windows, then close the other pane and kill the buffer in it also."
     (interactive)
@@ -317,6 +321,9 @@ layers configuration. You are free to put any user code."
     (kill-this-buffer)
     (if (not (one-window-p))
         (delete-window)))
+
+  (setq clean-buffer-list-delay-general 1)
+  (setq midnight-period 7200) ;; (eq (* 2 60 60) "2 hours")
 
   )
 
@@ -328,6 +335,9 @@ layers configuration. You are free to put any user code."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files (quote ("~/Dropbox/emacs/org/agenda/todo.org")))
+ '(package-selected-packages
+   (quote
+    (yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(safe-local-variable-values (quote ((setq-default indent-tabs-mode t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
