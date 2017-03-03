@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test-slice-parts
+# key: tesp
+# --
+if $1[$2] != $3[$2] {
+			t.Errorf("Expected %${4:q} got %$4.", $3[$2], $1[$2])
+}$0

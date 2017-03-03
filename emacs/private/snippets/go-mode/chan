@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: chan
+# key: chan
+# --
+$1 := make(chan ${2:struct\{\}}${3:, $4})$0

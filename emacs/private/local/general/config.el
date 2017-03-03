@@ -12,7 +12,17 @@
             '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; line numbers
-;; (linum-mode 1)
+(global-linum-mode 1)
+
+(global-set-key (kbd "<M-s-left>") 'windmove-left)
+(global-set-key (kbd "<M-s-right>") 'windmove-right)
+(global-set-key (kbd "<M-s-up>") 'windmove-up)
+(global-set-key (kbd "<M-s-down>") 'windmove-down)
+
+(setq mac-right-option-modifier nil)
+(setq global-auto-revert-mode nil)
+
+(setq tramp-default-method "ssh")
 
 ;; selection
 (delete-selection-mode 1)
@@ -31,6 +41,8 @@
 
 ;; dir moode options
 (setq dired-listing-switches "-alh")
+
+(setq calendar-week-start-day 1)
 
 ;; smart-beginning-of-line
 (load "~/.emacs.d/private/local/general/packages/smart-beginning-of-line.el")

@@ -1,14 +1,9 @@
-;; This file is not part of GNU Emacs.
-;;
-;;; License: GPLv3
 
-;; variables
+(setq gofmt-command "goimports")
+(add-hook 'before-save-hook 'gofmt-before-save)
+;;(go :variables go-tab-width 4)
 
-;; Use goimports instead of go-fmt
-;;(setq gofmt-command "goimports")
+(define-key global-map "\M-t" 'go-test-current-file)
+(define-key global-map "\M-p" 'go-test-current-project)
 
-;; Call Gofmt before saving
-;;(add-hook 'before-save-hook 'gofmt-before-save)
-
-;; godef jump
-;;(local-set-key (kbd "M-.") 'godef-jump)
+(global-set-key (kbd "\C-c e") 'next-error)

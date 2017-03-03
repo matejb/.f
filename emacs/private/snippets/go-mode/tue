@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: tue
+# key: tue
+# --
+if err != nil {
+   t.Errorf("Unexpected error %q.", err)
+}$0

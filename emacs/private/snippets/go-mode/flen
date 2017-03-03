@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: for-length
+# key: flen
+# --
+for $1 := 0; $1 < len($2); $1++ {
+    $0
+}

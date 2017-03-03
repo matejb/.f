@@ -44,9 +44,9 @@ values."
 
      ;; personal layers
      general
-     phpplus
-     apache
-     ;; goplus
+     ;;phpplus
+     ;; apache
+     goplus
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -55,12 +55,9 @@ values."
    dotspacemacs-additional-packages '(
                                       ;; (ac-php)
                                       edit-server
-                                      owdriver
-                                      flycheck-gometalinter
                                       string-inflection
-                                      gotest
-                                      restclient
-                                      midnight
+                                      org-jira
+                                      docker
    )
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
@@ -131,8 +128,8 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 14
-                               :weight normal
-                               :width normal
+                               :weight light
+                               :width light
                                :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -277,53 +274,38 @@ layers configuration. You are free to put any user code."
 
   (setq spacemacs-show-trailing-whitespace nil)
 
-  (global-set-key (kbd "M-a") 'yas-expand)
+  (add-hook 'Buffer-menu-mode-hook 
+            (lambda ()
+              (setq-local revert-buffer-function
+                          (lambda (&rest args)))))
 
   (org-agenda-files "~/Dropbox/emacs/org/agenda.dir")
-
-  (require 'owdriver)
-  (owdriver-define-command isearch-forward         t (isearch-forward))
-  (owdriver-define-command isearch-backward        t (isearch-backward))
 
   ;; (when (locate-library "edit-server")
   ;;   (require 'edit-server)
   ;;   (setq edit-server-new-frame nil)
   ;;   (edit-server-start))
 
-  (setq gofmt-command "goimports")
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (add-to-list 'yas-snippet-dirs "/home/matej/.f/emacs/private/snippets/go-mode")
-  ;;(go :variables go-tab-width 4)
+  (setq jiralib-url "https://jira.argotech.io")
+  ;; (setq request-log-level 'debug)
+  ;; (setq request-message-level 'debug)
 
-  (setq tramp-default-method "ssh")
+  ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+  ;; (setq exec-path (append exec-path '("/usr/local/bin")))
+  ;; ;; Use "docker-machine env box" command to find out your environment variables
+  ;; (setenv "DOCKER_TLS_VERIFY" "1")
+  ;; (setenv "DOCKER_HOST" "tcp://10.11.12.13:2376")
+  ;; (setenv "DOCKER_CERT_PATH" "/Users/matejbaco/.docker/machine/machines/box")
+  ;; (setenv "DOCKER_MACHINE_NAME" "box")
 
-  ;; skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
-  (setq flycheck-gometalinter-vendor t)
-  ;; only run fast linters
-  (setq flycheck-gometalinter-fast t)
-  ;; use in tests files
-  (setq flycheck-gometalinter-test t)
-  ;; disable linters
-  (setq flycheck-gometalinter-disable-linters '("gotype" "gocyclo"))
-  ;; Only enable selected linters
-  ;; (setq flycheck-gometalinter-disable-all t)
-  ;; (setq flycheck-gometalinter-enable-linters '("golint"))
-  ;; Set different deadline (default: 5s)
-  (setq flycheck-gometalinter-deadline "10s")
-
-  (setq mac-right-option-modifier nil)
-  (setq global-auto-revert-mode nil)
-
-  (defun close-and-kill-next-pane ()
-    "If there are multiple windows, then close the other pane and kill the buffer in it also."
+  (defun ediff-copy-both-to-C ()
     (interactive)
-    (other-window 1)
-    (kill-this-buffer)
-    (if (not (one-window-p))
-        (delete-window)))
-
-  (setq clean-buffer-list-delay-general 1)
-  (setq midnight-period 7200) ;; (eq (* 2 60 60) "2 hours")
+    (ediff-copy-diff ediff-current-difference nil 'C nil
+                     (concat
+                      (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                      (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+  (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+  (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
 
   )
 
@@ -334,10 +316,26 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/Dropbox/emacs/org/agenda/todo.org")))
+ '(elfeed-feeds
+   (quote
+    (("https://medium.com/feed/@matryer" golang)
+     ("http://golangweekly.com/rss/17kfkk1n" golang)
+     ("http://spf13.com/post/index.xml" golang)
+     ("https://dave.cheney.net/feed" golang)
+     ("https://blog.golang.org/feed.atom" golang)
+     ("https://rakyll.org/index.xml" golang)
+     ("https://www.joyent.com/blog/feed" os illumnos)
+     ("https://blog.gopheracademy.com/index.xml" golang)
+     ("https://dominik.honnef.co/atom.xml" golang)
+     ("http://planet.emacsen.org/atom.xml" emacs)
+     ("http://emacsredux.com/atom.xml" emacs))))
+ '(org-agenda-files
+   (quote
+    ("~/go/src/stash.argotech.io/arctr/argoctr/docs/notes/diary.org" "~/Dropbox/emacs/org/agenda/todo.org" "~/Dropbox/emacs/org/agenda/firma.org" "~/Dropbox/emacs/org/agenda/projects.org" "~/Dropbox/emacs/org/agenda/blog.org")))
+ '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (docker tablist docker-tramp org-jira elfeed go-add-tags yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(safe-local-variable-values (quote ((setq-default indent-tabs-mode t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

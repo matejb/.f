@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: error-with-message
+# key: ewm
+# --
+errors.WithMessage(${1:err}, $0)

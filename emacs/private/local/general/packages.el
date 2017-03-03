@@ -7,6 +7,9 @@
 (setq general-packages
       '(
 
+        yasnippet
+        (yasnippet :location elpa)
+
         (goto-last-change
          :fetcher url
          :url "https://www.emacswiki.org/emacs/download/goto-last-change.el")
@@ -27,11 +30,26 @@
          :fetcher url
          :url "https://raw.githubusercontent.com/lewang/ws-butler/master/ws-butler.el")
 
+        elfeed
+        (elfeed :location elpa)
+
+        midnight
+        (midnight :location elpa)
+
+        restclient
+        (restclient :location elpa)
+
         ;; exclude list
-        
+
         ;; (flyspell :excluded t)
 
         ))
+
+(defun general/post-init-yasnippet ()
+  (when (configuration-layer/package-usedp 'yasnippet)
+    (global-set-key (kbd "M-đ") 'yas-expand)
+    )
+  )
 
 (defun general/init-goto-last-change ()
   (use-package goto-last-change
@@ -68,6 +86,36 @@
     :defer t
     :init
     (ws-butler-mode 1)))
+
+(defun general/init-elfeed ()
+  (use-package elfeed-search
+    :defer t
+    :init
+    ;; code
+    :config
+    (define-key elfeed-search-mode-map (kbd "RET") 'elfeed-search-show-entry-new-window)
+    (define-key elfeed-show-mode-map "q" 'elfeed-show-exit)
+    ))
+
+(defun general/init-midnight ()
+  (use-package midnight
+    :defer t
+    :init
+    ;; code
+    :config
+    (setq clean-buffer-list-delay-general 1)
+    (setq midnight-period 7200) ;; (eq (* 2 60 60) "2 hours")
+    ))
+
+(defun general/init-restclient ()
+  (use-package restclient
+    :defer t
+    :init))
+
+;; (defun general/init-golden-ratio ()
+;;   (use-package golden-ratio
+;;     :defer t
+;;     :init))
 
 ;; (defun general/init-aggressive-indent ()
 ;;   (use-package aggressive-indent

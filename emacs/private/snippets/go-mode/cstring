@@ -1,6 +1,9 @@
-#name : CString
-# expand-env: ((yas/indent-line 'fixed))
+# -*- mode: snippet -*-
+# name: custom-sort
+# key: cs
 # --
-c${1:$(capitalize yas/text)} := C.CString($1)
-defer C.free(unsafe.Pointer(c${1:$(capitalize yas/text)}))
+type $1 []$2
 
+func (a $1) Len() int           { return len(a) }
+func (a $1) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a $1) Less(i, j int) bool { return a[i].$3 < a[j].$3 }$0

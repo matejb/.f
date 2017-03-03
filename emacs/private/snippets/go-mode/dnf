@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: defer-new-function
+# key: dnf
+# --
+defer func() {
+      $0
+} ()
