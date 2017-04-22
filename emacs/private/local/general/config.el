@@ -31,7 +31,7 @@
 (setq tab-width 4 indent-tabs-mode 1)
 
 ;; expand region
-(define-key global-map "\M-q" 'er/expand-region)
+;;(define-key global-map "\M-q" 'er/expand-region)
 
 ;; comment-or-uncomment-region
 (define-key global-map "\M-d" 'comment-or-uncomment-region)

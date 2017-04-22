@@ -39,6 +39,9 @@
         restclient
         (restclient :location elpa)
 
+        ereader
+        (ereader :location elpa)
+
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -109,6 +112,11 @@
 
 (defun general/init-restclient ()
   (use-package restclient
+    :defer t
+    :init))
+
+(defun general/init-ereader ()
+  (use-package ereader
     :defer t
     :init))
 

@@ -13,6 +13,9 @@
     go-add-tags
     (go-add-tags :location elpa)
 
+    go-guru
+    (go-guru :location elpa)
+
     ))
 
 (defun goplus/post-init-yasnippet ()
@@ -53,3 +56,24 @@
 (defun goplus/init-go-add-tags ()
   (use-package go-add-tags
     ))
+
+(defun go/init-go-guru()
+  (use-package go-guru
+    :init
+    (define-key global-map "\M-q" 'go-guru-expand-region)
+    )
+  (spacemacs/declare-prefix-for-mode 'go-mode "mf" "guru")
+  (spacemacs/set-leader-keys-for-major-mode 'go-mode
+    "fd" 'go-guru-describe
+    "ff" 'go-guru-freevars
+    "fi" 'go-guru-implements
+    "fc" 'go-guru-peers
+    "fr" 'go-guru-referrers
+    "fj" 'go-guru-definition
+    "fp" 'go-guru-pointsto
+    "fs" 'go-guru-callstack
+    "fe" 'go-guru-whicherrs
+    "f<" 'go-guru-callers
+    "f>" 'go-guru-callees
+    "fo" 'go-guru-set-scope))
+

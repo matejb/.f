@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: go-lambda-function
+# key: glf
+# --
+go func($1) {
+   $0
+}($2)

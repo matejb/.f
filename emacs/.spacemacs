@@ -58,6 +58,7 @@ values."
                                       string-inflection
                                       org-jira
                                       docker
+                                      ereader
    )
   ;; A list of packages and/or extensions that will not be install and loaded.
   dotspacemacs-excluded-packages '(
@@ -307,6 +308,8 @@ layers configuration. You are free to put any user code."
   (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
   (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
 
+  (require 'ereader) (require 'org-ebook)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -318,7 +321,8 @@ layers configuration. You are free to put any user code."
  ;; If there is more than one, they won't work right.
  '(elfeed-feeds
    (quote
-    (("https://medium.com/feed/@matryer" golang)
+    (("https://www.goinggo.net/index.xml" golang)
+     ("https://medium.com/feed/@matryer" golang)
      ("http://golangweekly.com/rss/17kfkk1n" golang)
      ("http://spf13.com/post/index.xml" golang)
      ("https://dave.cheney.net/feed" golang)
@@ -331,11 +335,11 @@ layers configuration. You are free to put any user code."
      ("http://emacsredux.com/atom.xml" emacs))))
  '(org-agenda-files
    (quote
-    ("~/go/src/stash.argotech.io/arctr/argoctr/docs/notes/diary.org" "~/Dropbox/emacs/org/agenda/todo.org" "~/Dropbox/emacs/org/agenda/firma.org" "~/Dropbox/emacs/org/agenda/projects.org" "~/Dropbox/emacs/org/agenda/blog.org")))
+    ("~/Dropbox/emacs/org/agenda/todo.org" "~/Dropbox/emacs/org/agenda/firma.org" "~/Dropbox/emacs/org/agenda/projects.org" "~/Dropbox/emacs/org/agenda/blog.org")))
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (docker tablist docker-tramp org-jira elfeed go-add-tags yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (ereader xml+ docker tablist docker-tramp org-jira elfeed go-add-tags yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(safe-local-variable-values (quote ((setq-default indent-tabs-mode t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

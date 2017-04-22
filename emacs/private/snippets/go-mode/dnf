@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: defer-new-function
-# key: dnf
+# name: defer-lambda-function
+# key: dlf
 # --
-defer func() {
+defer func($1) {
       $0
-} ()
+}($2)
