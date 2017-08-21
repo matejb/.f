@@ -42,6 +42,9 @@
         ereader
         (ereader :location elpa)
 
+        helm-tramp
+        (helm-tramp :location elpa)
+
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -119,6 +122,13 @@
   (use-package ereader
     :defer t
     :init))
+
+(defun general/init-helm-tramp ()
+  (use-package helm-tramp
+    :defer t
+    :init
+    (global-set-key (kbd "M-m a h") 'helm-tramp)
+    ))
 
 ;; (defun general/init-golden-ratio ()
 ;;   (use-package golden-ratio

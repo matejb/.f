@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test-preety-compare
+# key: tpc
+# --
+if diff := pretty.Compare($1, $2); diff != "" {
+	t.Error(diff)
+}$0

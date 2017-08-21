@@ -16,6 +16,9 @@
     go-guru
     (go-guru :location elpa)
 
+    go-dlv
+    (go-dlv :location elpa)
+
     ))
 
 (defun goplus/post-init-yasnippet ()
@@ -57,7 +60,7 @@
   (use-package go-add-tags
     ))
 
-(defun go/init-go-guru()
+(defun goplus/init-go-guru()
   (use-package go-guru
     :init
     (define-key global-map "\M-q" 'go-guru-expand-region)
@@ -76,4 +79,9 @@
     "f<" 'go-guru-callers
     "f>" 'go-guru-callees
     "fo" 'go-guru-set-scope))
+
+(defun goplus/init-go-dlv()
+  (use-package go-dlv
+    :init
+    ))
 
