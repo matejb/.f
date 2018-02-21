@@ -14,10 +14,12 @@
 ;; line numbers
 (global-linum-mode 1)
 
-(global-set-key (kbd "<M-s-left>") 'windmove-left)
-(global-set-key (kbd "<M-s-right>") 'windmove-right)
-(global-set-key (kbd "<M-s-up>") 'windmove-up)
-(global-set-key (kbd "<M-s-down>") 'windmove-down)
+(global-set-key (kbd "<A-M-left>") 'windmove-left)
+(global-set-key (kbd "<A-M-right>") 'windmove-right)
+(global-set-key (kbd "<A-M-up>") 'windmove-up)
+(global-set-key (kbd "<A-M-down>") 'windmove-down)
+
+(global-set-key (kbd "\C-c i") 'ispell)
 
 (setq mac-right-option-modifier nil)
 (setq global-auto-revert-mode nil)

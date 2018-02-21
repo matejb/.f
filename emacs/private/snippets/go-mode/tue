@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: tue
+# name: test unexpected error
 # key: tue
 # --
 if err != nil {
-   t.Errorf("Unexpected error %q.", err)
+   t.Errorf("unexpected error %q", err)
 }$0

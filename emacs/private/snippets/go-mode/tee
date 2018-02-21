@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: tee
+# name: test expected error
 # key: tee
 # --
 if err == nil {
-   t.Error("Expected error.")
+   t.Error("expected error.")
 }$0
