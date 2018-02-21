@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: test expected diff
+# key: tediff
+# --
+if diff := pretty.Compare($1, $2); diff != "" {
+	t.Errorf("$3diff: (-got +want)\n%s", $4diff)
+}
+$0
