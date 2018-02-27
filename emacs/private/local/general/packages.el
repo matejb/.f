@@ -16,9 +16,7 @@
 
         (multiple-cursors)
 
-        (cursor-chg
-         :fetcher url
-         :url "https://www.emacswiki.org/emacs/download/cursor-chg.el")
+        ;;(cursor-chg)
 
         (expand-region
          :fetcher github
@@ -75,13 +73,13 @@
     (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
     :config))
 
-(defun general/init-cursor-chg ()
-  (use-package cursor-chg
-    :defer t
-    :init
-    (toggle-cursor-type-when-idle 1) ; Turn on cursor change when Emacs is idle
-    (change-cursor-mode 1) ; Turn on change for overwrite, read-only, and input mode
-    :config))
+;; (defun general/init-cursor-chg ()
+;;   (use-package cursor-chg
+;;     :defer t
+;;     :init
+;;     (curchg-toggle-cursor-type-when-idle 1) ; Turn on cursor change when Emacs is idle
+;;     (curchg-change-cursor-mode 1) ; Turn on change for overwrite, read-only, and input mode
+;;     :config))
 
 (defun general/init-expand-region ()
   (use-package expand-region
