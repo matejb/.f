@@ -84,3 +84,7 @@ alias c='clear'
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -f ~/.f/bash/.fzf_extra ] && source ~/.f/bash/.fzf_extra
+
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"                  # $EDITOR should open in terminal
+export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
