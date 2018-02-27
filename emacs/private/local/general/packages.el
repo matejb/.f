@@ -43,6 +43,12 @@
         helm-tramp
         (helm-tramp :location elpa)
 
+        terraform-mode
+        (terraform-mode :location elpa)
+
+        company-terraform
+        (company-terraform :location elpa)
+
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -126,6 +132,19 @@
     :defer t
     :init
     (global-set-key (kbd "M-m a h") 'helm-tramp)
+    ))
+
+
+(defun general/init-company-terraform ()
+  (use-package company-terraform
+    :defer t
+    :init
+    ))
+
+(defun general/init-terraform-mode ()
+  (use-package terraform-mode
+    :defer t
+    :init
     ))
 
 ;; (defun general/init-golden-ratio ()
