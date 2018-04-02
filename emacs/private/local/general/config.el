@@ -14,10 +14,10 @@
 ;; line numbers
 (global-linum-mode 1)
 
-(global-set-key (kbd "<S-M-left>") 'windmove-left)
-(global-set-key (kbd "<S-M-right>") 'windmove-right)
-(global-set-key (kbd "<S-M-up>") 'windmove-up)
-(global-set-key (kbd "<S-M-down>") 'windmove-down)
+(global-set-key (kbd "<M-left>") 'windmove-left)
+(global-set-key (kbd "<M-right>") 'windmove-right)
+(global-set-key (kbd "<M-up>") 'windmove-up)
+(global-set-key (kbd "<M-down>") 'windmove-down)
 
 (global-set-key (kbd "\C-c i") 'ispell)
 
@@ -36,7 +36,8 @@
 ;;(define-key global-map "\M-q" 'er/expand-region)
 
 ;; comment-or-uncomment-region
-(define-key global-map "\M-d" 'comment-or-uncomment-region)
+(global-set-key (kbd "\C-c w") 'comment-or-uncomment-region)
+;; (define-key global-map (kbd "<C-c w>") 'comment-or-uncomment-region)
 
 ;; helm-imenu
 (global-set-key (kbd "\C-c m") 'helm-imenu)

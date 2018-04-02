@@ -3,5 +3,5 @@
 # key: tee
 # --
 if err == nil {
-   t.Error("expected error.")
+   t.Error("expected error")
 }$0
