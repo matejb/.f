@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     nginx
      python
      elixir
      rust
@@ -47,9 +48,6 @@ values."
      markdown
      yaml
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
      spell-checking
      syntax-checking
      version-control
@@ -58,8 +56,8 @@ values."
      javascript
      sql
      go
-     d
-
+     org-jira
+     
      ;; personal layers
      general
      ;;phpplus
@@ -74,7 +72,6 @@ values."
                                       ;; (ac-php)
                                       edit-server
                                       string-inflection
-                                      org-jira
                                       docker
                                       ereader
                                       ag
@@ -313,6 +310,16 @@ values."
    dotspacemacs-whitespace-cleanup changed
    ))
 
+;; (defun turn-off-mouse (&optional frame)
+;;   (interactive)
+;;   (let ((inhibit-message t) (default-directory "~"))
+;;     (shell-command "synclient TouchpadOff=1")))
+
+;; (defun turn-on-mouse (&optional frame)
+;;   (interactive)
+;;   (let ((inhibit-message t) (default-directory "~"))
+;;     (shell-command "synclient TouchpadOff=0")))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
@@ -320,13 +327,17 @@ any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
 
   (desktop-save-mode 1)
-
   )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
+  (spacemacs|use-package-add-hook org
+    :pre-init
+    (package-initialize)
+    )
 
   'general/init-global-config
 
@@ -339,24 +350,11 @@ layers configuration. You are free to put any user code."
               (setq-local revert-buffer-function
                           (lambda (&rest args)))))
 
-  (org-agenda-files "~/Dropbox/emacs/org/agenda.dir")
+  (setq org-agenda-files (append org-agenda-files '("~/Dropbox/emacs/org/agenda")))
 
-  ;; (when (locate-library "edit-server")
-  ;;   (require 'edit-server)
-  ;;   (setq edit-server-new-frame nil)
-  ;;   (edit-server-start))
-
-  (setq jiralib-url "https://jira.argotech.io")
-  ;; (setq request-log-level 'debug)
-  ;; (setq request-message-level 'debug)
-
-  ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-  ;; (setq exec-path (append exec-path '("/usr/local/bin")))
-  ;; ;; Use "docker-machine env box" command to find out your environment variables
-  ;; (setenv "DOCKER_TLS_VERIFY" "1")
-  ;; (setenv "DOCKER_HOST" "tcp://10.11.12.13:2376")
-  ;; (setenv "DOCKER_CERT_PATH" "/Users/matejbaco/.docker/machine/machines/box")
-  ;; (setenv "DOCKER_MACHINE_NAME" "box")
+  (setq jiralib-url "https://medisante.atlassian.net")
+  (setq org-jira-working-dir "~/org-jira")
+  (setq org-agenda-files (append org-agenda-files '("~/org-jira")))
 
   (defun ediff-copy-both-to-C ()
     (interactive)
@@ -394,19 +392,30 @@ layers configuration. You are free to put any user code."
      ("http://planet.emacsen.org/atom.xml" emacs)
      ("http://emacsredux.com/atom.xml" emacs))))
  '(evil-want-Y-yank-to-eol nil)
+ '(git-commit-fill-column 72)
  '(git-commit-setup-hook
    (quote
     (git-commit-save-message git-commit-setup-changelog-support git-commit-turn-on-auto-fill git-commit-turn-on-flyspell git-commit-propertize-diff with-editor-usage-message)))
+ '(git-commit-summary-max-length 50)
  '(magit-revision-use-gravatar-kludge t)
  '(ns-use-native-fullscreen nil)
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/emacs/org/agenda/todo.org" "~/Dropbox/emacs/org/agenda/firma.org" "~/Dropbox/emacs/org/agenda/projects.org" "~/Dropbox/emacs/org/agenda/blog.org")))
+ '(org-projectile-capture-template "* TODO %?
+	:CODEBLOCK:
+	%i
+	:END:
+	%a")
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic ob-elixir flycheck-mix flycheck-credo alchemist elixir-mode company-terraform terraform-mode hcl-mode org-category-capture org-mime ghub let-alist toml-mode racer flycheck-rust seq cargo rust-mode helm-tramp go-dlv d-mode company-dcd ivy flycheck-dmd-dub winum unfill fuzzy dockerfile-mode ag ereader xml+ docker tablist docker-tramp org-jira elfeed go-add-tags yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
- '(safe-local-variable-values (quote ((setq-default indent-tabs-mode t)))))
+    (pinboard-api nginx-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic ob-elixir flycheck-mix flycheck-credo alchemist elixir-mode company-terraform terraform-mode hcl-mode org-category-capture org-mime ghub let-alist toml-mode racer flycheck-rust seq cargo rust-mode helm-tramp go-dlv d-mode company-dcd ivy flycheck-dmd-dub winum unfill fuzzy dockerfile-mode ag ereader xml+ docker tablist docker-tramp org-jira elfeed go-add-tags yaml-mode web-mode web-beautify tagedit string-inflection sql-indent smeargle smarty-mode slim-mode scss-mode sass-mode restclient pug-mode phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets owdriver yaxception smartrep orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode goto-last-change gotest go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor emmet-mode edit-server drupal-mode diff-hl cursor-chg company-web web-completion-data company-tern dash-functional tern company-statistics company-go go-mode company coffee-mode auto-yasnippet auto-dictionary apache-mode ac-php yasnippet ac-php-core xcscope php-mode ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+ '(safe-local-variable-values
+   (quote
+    ((org-todo-keyword-faces
+      ("TODO" . "orange")
+      ("CALL" . "orange")
+      ("SEE" . "orange")
+      ("CANCEL" . "red"))
+     (setq-default indent-tabs-mode t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
