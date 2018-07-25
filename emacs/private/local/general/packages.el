@@ -49,6 +49,9 @@
         company-terraform
         (company-terraform :location elpa)
 
+        org-projectile
+        (org-projectile :location elpa)
+
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -60,6 +63,17 @@
     (global-set-key (kbd "M-đ") 'yas-expand)
     )
   )
+
+(defun general/post-init-org-projectile ()
+  (use-package org-projectile
+      :bind ("C-c n p" . org-projectile-project-todo-completing-read)
+      :config
+      (org-projectile-single-file)
+      (progn
+        (setq org-projectile-projects-file "~/Dropbox/emacs/org/agenda/work.org")
+        (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+        (push (org-projectile-project-todo-entry) org-capture-templates))
+      :ensure t))
 
 (defun general/init-goto-last-change ()
   (use-package goto-last-change
