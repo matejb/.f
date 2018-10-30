@@ -353,7 +353,12 @@ layers configuration. You are free to put any user code."
                           (lambda (&rest args)))))
 
   (setq org-agenda-files (directory-files-recursively "~/Dropbox/emacs/org/agenda/" "\.org$"))
-  ; (setq org-agenda-files (append org-agenda-files '("~/Dropbox/emacs/org/agenda")))
+  ;; (setq org-agenda-files (append org-agenda-files '("~/Dropbox/emacs/org/agenda")))
+
+  (push '("t" "Todo" entry (file+headline "~/Dropbox/emacs/org/agenda/todo.org" "Ostalo")
+          "* TODO %?\n CREATED: %U\n  %i") org-capture-templates)
+  (push '("P" "Personal project" entry (file+headline "~/Dropbox/emacs/org/agenda/projects.org" "my own tools/libs")
+          "* TODO %?\n CREATED: %U\n  %i") org-capture-templates)
 
   (setq jiralib-url "https://medisante.atlassian.net")
   (setq org-jira-working-dir "~/org-jira")
