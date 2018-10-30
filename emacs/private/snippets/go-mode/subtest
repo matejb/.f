@@ -2,6 +2,6 @@
 # name: subtest
 # key: st
 # --
-t.Run("$1", func(t *testing.T) {
+t.Run($1, func(t *testing.T) {
             $0
 })

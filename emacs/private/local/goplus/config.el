@@ -1,5 +1,6 @@
 
 (setq gofmt-command "goimports")
+(setq gofmt-args ["-local" "bitbucket.org/medisante"])
 (add-hook 'before-save-hook 'gofmt-before-save)
 ;;(go :variables go-tab-width 4)
 

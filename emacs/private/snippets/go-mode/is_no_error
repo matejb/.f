@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: is no error
+# key: isne
+# --
+is.NoErr(${1:err})

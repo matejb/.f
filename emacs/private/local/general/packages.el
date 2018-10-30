@@ -28,8 +28,8 @@
          :fetcher url
          :url "https://raw.githubusercontent.com/lewang/ws-butler/master/ws-butler.el")
 
-        elfeed
-        (elfeed :location elpa)
+        ;; elfeed
+        ;; (elfeed :location elpa)
 
         midnight
         (midnight :location elpa)
@@ -52,6 +52,9 @@
         org-projectile
         (org-projectile :location elpa)
 
+        rjsx-mode
+        (rjsx-mode :location elpa)
+
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -71,7 +74,7 @@
       (org-projectile-single-file)
       (progn
         (setq org-projectile-projects-file "~/Dropbox/emacs/org/agenda/work.org")
-        (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+        ; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
         (push (org-projectile-project-todo-entry) org-capture-templates))
       :ensure t))
 
@@ -111,15 +114,15 @@
     :init
     (ws-butler-mode 1)))
 
-(defun general/init-elfeed ()
-  (use-package elfeed-search
-    :defer t
-    :init
-    ;; code
-    :config
-    (define-key elfeed-search-mode-map (kbd "RET") 'elfeed-search-show-entry-new-window)
-    (define-key elfeed-show-mode-map "q" 'elfeed-show-exit)
-    ))
+;; (defun general/init-elfeed ()
+;;   (use-package elfeed-search
+;;     :defer t
+;;     :init
+;;     ;; code
+;;     :config
+;;     (define-key elfeed-search-mode-map (kbd "RET") 'elfeed-search-show-entry-new-window)
+;;     (define-key elfeed-show-mode-map "q" 'elfeed-show-exit)
+;;     ))
 
 (defun general/init-midnight ()
   (use-package midnight
@@ -157,6 +160,12 @@
 
 (defun general/init-terraform-mode ()
   (use-package terraform-mode
+    :defer t
+    :init
+    ))
+
+(defun general/init-rjsx-mode ()
+  (use-package rjsx-mode
     :defer t
     :init
     ))
