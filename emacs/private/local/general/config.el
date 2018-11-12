@@ -70,3 +70,6 @@
 
 ;; sql-indent-string
 (load "~/.emacs.d/private/local/general/packages/sql-indent-string.el")
+
+;; helm-org-clock
+(load "~/.emacs.d/private/local/general/packages/helm-org-clock.el")

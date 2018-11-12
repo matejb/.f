@@ -51,10 +51,7 @@
 
         org-projectile
         (org-projectile :location elpa)
-
-        rjsx-mode
-        (rjsx-mode :location elpa)
-
+        
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -160,12 +157,6 @@
 
 (defun general/init-terraform-mode ()
   (use-package terraform-mode
-    :defer t
-    :init
-    ))
-
-(defun general/init-rjsx-mode ()
-  (use-package rjsx-mode
     :defer t
     :init
     ))
