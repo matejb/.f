@@ -18,11 +18,8 @@
     :init
     ))
 
-(defun react/init-typescript-mode ()
+(defun react/post-init-typescript-mode ()
   (use-package typescript-mode
-    :defer t
-    :init
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
     :config
     (setq typescript-indent-level 2)
     ))

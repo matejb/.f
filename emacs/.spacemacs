@@ -58,7 +58,8 @@ values."
      sql
      go
      org-jira
-     
+     typescript
+
      ;; personal layers
      general
      ;;phpplus
