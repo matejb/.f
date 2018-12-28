@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test table
+# key: tt
+# --
+tt := map[string]struct{
+   $0
+}{}

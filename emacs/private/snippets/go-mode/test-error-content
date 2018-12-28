@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: test error content
+# key: tec
+# --
+switch {
+case ${1:err} != nil && ${2:c.expectedErr} == nil:
+	t.Fatalf("unexpected error: %s", $1)
+case $1 == nil && $2 != nil:
+	t.Fatal("expected error")
+case err != nil && $2 != nil && !strings.Contains(err.Error(), $2.Error()):
+	t.Fatalf("expected error %q but got %q", $2, $1)
+}

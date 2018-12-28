@@ -51,7 +51,9 @@
 
         org-projectile
         (org-projectile :location elpa)
-        
+
+        (aweshell :location (recipe :fetcher github :repo "manateelazycat/aweshell"))
+
         ;; exclude list
 
         ;; (flyspell :excluded t)
@@ -159,6 +161,17 @@
   (use-package terraform-mode
     :defer t
     :init
+    ))
+
+
+(defun general/init-aweshell ()
+  (use-package aweshell
+    :init
+    :bind (("M-s" . aweshell-new)
+           ("M-n" . aweshell-next)
+           ("M-p" . aweshell-prev)
+           ("C-c M-s" . aweshell-sudo-toggle-key)
+           ("C-c C-r" . aweshell-search-history-key))
     ))
 
 ;; (defun general/init-golden-ratio ()

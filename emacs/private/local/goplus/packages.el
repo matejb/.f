@@ -19,6 +19,9 @@
     go-dlv
     (go-dlv :location elpa)
 
+    go-tag
+    (go-tag :location elpa)
+
     ))
 
 (defun goplus/post-init-yasnippet ()
@@ -64,5 +67,11 @@
 (defun goplus/init-go-dlv()
   (use-package go-dlv
     :init
+    ))
+
+(defun goplus/init-go-tag()
+  (use-package go-tag
+    :init
+    (setq go-tag-args (list "-transform" "camelcase"))
     ))
 
