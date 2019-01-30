@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: test table range
+# key: ttr
+# --
+for _, c := range tt {
+	t.Run(c.it, func(t *testing.T) {
+		$0
+	})
+}

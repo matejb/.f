@@ -2,6 +2,7 @@
 # name: test table
 # key: tt
 # --
-tt := map[string]struct{
+tt := []struct{
+   it string
    $0
 }{}
