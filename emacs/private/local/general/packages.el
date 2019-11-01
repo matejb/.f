@@ -75,6 +75,12 @@
         (setq org-projectile-projects-file "~/Dropbox/emacs/org/agenda/work.org")
         ; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
         (push (org-projectile-project-todo-entry) org-capture-templates))
+
+      (push '("t" "Todo" entry (file+headline "~/Dropbox/emacs/org/agenda/todo.org" "Ostalo")
+              "* TODO %?\n CREATED: %U\n  %i") org-capture-templates)
+      (push '("P" "Personal project" entry (file+headline "~/Dropbox/emacs/org/agenda/projects.org" "my own tools/libs")
+              "* TODO %?\n CREATED: %U\n  %i") org-capture-templates)
+
       :ensure t))
 
 (defun general/init-goto-last-change ()

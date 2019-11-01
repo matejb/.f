@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: is test error content
+# key: isec
+# --
+switch {
+case ${1:err} != nil && ${2:c.expectedErr} == nil:
+	is.Fail() // unexpected error
+case $1 == nil && $2 != nil:
+	is.Fail() // expected error
+case $1 != nil && $2 != nil && !strings.Contains($1.Error(), $2.Error()):
+	is.Fail() // error differs
+}

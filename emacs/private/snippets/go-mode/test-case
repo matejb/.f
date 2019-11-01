@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: test case
+# key: tc
+# --
+{
+	it: "$1",
+	$0
+},

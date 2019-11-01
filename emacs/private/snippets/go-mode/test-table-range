@@ -2,8 +2,8 @@
 # name: test table range
 # key: ttr
 # --
-for _, c := range tt {
-	t.Run(c.it, func(t *testing.T) {
+for _, tc := range cases {
+	t.Run(tc.it, func(t *testing.T) {
 		$0
 	})
 }

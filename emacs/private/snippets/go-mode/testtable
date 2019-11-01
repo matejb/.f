@@ -2,7 +2,7 @@
 # name: test table
 # key: tt
 # --
-tt := []struct{
+cases := []struct{
    it string
    $0
 }{}
