@@ -52,6 +52,9 @@
         org-projectile
         (org-projectile :location elpa)
 
+        ag
+        (ag :location elpa)
+
         (aweshell :location (recipe :fetcher github :repo "manateelazycat/aweshell"))
 
         ;; exclude list
@@ -169,6 +172,11 @@
     :init
     ))
 
+(defun general/init-ag ()
+  (use-package ag
+    :defer t
+    :init
+    ))
 
 (defun general/init-aweshell ()
   (use-package aweshell

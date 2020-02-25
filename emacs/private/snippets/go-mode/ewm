@@ -2,4 +2,4 @@
 # name: error with message
 # key: ewm
 # --
-fmt.Errorf("$2: %s", ${1:err})$0
+fmt.Errorf("$2: %w", ${1:err})$0

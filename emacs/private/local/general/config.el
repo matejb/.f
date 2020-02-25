@@ -1,9 +1,3 @@
-;;; config.el --- PHP Layer config File for Spacemacs
-;;
-;; This file is not part of GNU Emacs.
-;;
-;;; License: GPLv3
-
 ;; variables
 
 ;; full filename
@@ -12,7 +6,7 @@
             '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; line numbers
-(global-linum-mode 1)
+;; (global-linum-mode 1)
 
 (global-set-key (kbd "<M-left>") 'windmove-left)
 (global-set-key (kbd "<M-right>") 'windmove-right)
