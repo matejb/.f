@@ -121,17 +121,15 @@
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
   (use-package general
-    ;:after evil
+    :demand t
     :config
-    (general-create-definer mb/leader-keys
-      :keymaps '(normal insert visual emacs)
-      ;:prefix "SPC"
-      :global-prefix "M-m")
 
+    (general-create-definer mb/leader-keys
+      :prefix "C-c"
+      :global-prefix "C-c")
     (mb/leader-keys
-      "t"  '(:ignore t :which-key "toggles")
-      "tt" '(counsel-load-theme :which-key "choose theme")
-      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
+	  ;"tt" '(counsel-load-theme :which-key "choose theme")
+	  "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
 
   ;(use-package evil
   ;  :init
@@ -411,8 +409,8 @@
 
   ;; Automatically tangle our Emacs.org config file when we save it
   (defun mb/org-babel-tangle-config ()
-    (when (string-equal (file-name-directory (buffer-file-name))
-			(expand-file-name user-emacs-directory))
+    (when (string-equal (file-name-nondirectory buffer-file-name) "Emacs.org")
+
       ;; Dynamic scoping to the rescue
       (let ((org-confirm-babel-evaluate nil))
 	(org-babel-tangle))))
