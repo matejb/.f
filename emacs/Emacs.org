@@ -100,6 +100,10 @@
   ;; Set up the visible bell
   (setq visible-bell t)
 
+  (delete-selection-mode t)
+
+  (setq tab-width 4 indent-tabs-mode 1)
+
   (column-number-mode)
   (global-display-line-numbers-mode t)
 
@@ -117,42 +121,43 @@
 
 #+begin_src emacs-lisp
 
-  ;; Make ESC quit prompt
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+	;; Make ESC quit prompt
+	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-  (use-package general
-    :demand t
-    :config
+	(use-package general
+	  :demand t
+	  :config
 
-    (general-create-definer mb/leader-keys
-      :prefix "C-c"
-      :global-prefix "C-c")
-    (mb/leader-keys
-	  ;"tt" '(counsel-load-theme :which-key "choose theme")
-	  "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
+	  (general-create-definer mb/leader-keys
+		:prefix "C-c"
+		:global-prefix "C-c")
+	  (mb/leader-keys
+		;"tt" '(counsel-load-theme :which-key "choose theme")
+		"fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))
+		"m" 'imenu))
 
-  ;(use-package evil
-  ;  :init
-  ;  (setq evil-want-integration t)
-  ;  (setq evil-want-keybinding nil)
-  ;  (setq evil-want-C-u-scroll t)
-  ;  (setq evil-want-C-i-jump nil)
-  ;  :config
-  ;  (evil-mode 1)
-  ;  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  ;  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+	;(use-package evil
+	;  :init
+	;  (setq evil-want-integration t)
+	;  (setq evil-want-keybinding nil)
+	;  (setq evil-want-C-u-scroll t)
+	;  (setq evil-want-C-i-jump nil)
+	;  :config
+	;  (evil-mode 1)
+	;  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+	;  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;  ;; Use visual line motions even outside of visual-line-mode buffers
-  ;  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  ;  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+	;  ;; Use visual line motions even outside of visual-line-mode buffers
+	;  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+	;  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  ;  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  ;  (evil-set-initial-state 'dashboard-mode 'normal)
+	;  (evil-set-initial-state 'messages-buffer-mode 'normal)
+	;  (evil-set-initial-state 'dashboard-mode 'normal)
 
-  ;(use-package evil-collection
-  ;  :after evil
-  ;  :config
-  ;  (evil-collection-init))
+	;(use-package evil-collection
+	;  :after evil
+	;  :config
+	;  (evil-collection-init))
 
 #+end_src
 
@@ -482,10 +487,43 @@
 ** Commenting
 
 #+begin_src emacs-lisp
-  
+
+  (general-define-key "C-c w" 'comment-or-uncomment-region)
+
   ;(use-package evil-nerd-commenter
   ;  :bind ("M-;" . evilnc-comment-or-uncomment-lines))
 
+#+end_src
+
+** Duplicate line or region
+
+#+begin_src emacs-lisp
+
+  ;; duplicate-current-line-or-region
+  (defun duplicate-current-line-or-region (arg)
+    "Duplicates the current line or region ARG times.
+
+  If there's no region, the current line will be duplicated. However, if
+  there's a region, all lines that region covers will be duplicated."
+    :defer t
+    (interactive "p")
+    (let (beg end (origin (point)))
+      (if (and mark-active (> (point) (mark)))
+	  (exchange-point-and-mark))
+      (setq beg (line-beginning-position))
+      (if mark-active
+	  (exchange-point-and-mark))
+      (setq end (line-end-position))
+      (let ((region (buffer-substring-no-properties beg end)))
+	(dotimes (i arg)
+	  (goto-char end)
+	  (newline)
+	  (insert region)
+	  (setq end (point)))
+	(goto-char (+ origin (* (length region) arg) arg)))))
+
+  (general-define-key "C-c d" 'duplicate-current-line-or-region)
+  
 #+end_src
 
 ** Go

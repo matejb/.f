@@ -61,6 +61,10 @@
 ;; Set up the visible bell
 (setq visible-bell t)
 
+(delete-selection-mode t)
+
+(setq tab-width 4 indent-tabs-mode 1)
+
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
@@ -80,11 +84,12 @@
   :config
 
   (general-create-definer mb/leader-keys
-    :prefix "C-c"
-    :global-prefix "C-c")
+	:prefix "C-c"
+	:global-prefix "C-c")
   (mb/leader-keys
 	;"tt" '(counsel-load-theme :which-key "choose theme")
-	"fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
+	"fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))
+	"m" 'imenu))
 
 ;(use-package evil
 ;  :init
@@ -321,8 +326,35 @@
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
+(general-define-key "C-c w" 'comment-or-uncomment-region)
+
 ;(use-package evil-nerd-commenter
 ;  :bind ("M-;" . evilnc-comment-or-uncomment-lines))
+
+;; duplicate-current-line-or-region
+(defun duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
+
+If there's no region, the current line will be duplicated. However, if
+there's a region, all lines that region covers will be duplicated."
+  :defer t
+  (interactive "p")
+  (let (beg end (origin (point)))
+    (if (and mark-active (> (point) (mark)))
+	(exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if mark-active
+	(exchange-point-and-mark))
+    (setq end (line-end-position))
+    (let ((region (buffer-substring-no-properties beg end)))
+      (dotimes (i arg)
+	(goto-char end)
+	(newline)
+	(insert region)
+	(setq end (point)))
+      (goto-char (+ origin (* (length region) arg) arg)))))
+
+(general-define-key "C-c d" 'duplicate-current-line-or-region)
 
 (use-package go-mode
   :mode "\\.go\\'"
