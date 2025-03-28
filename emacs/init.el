@@ -10,9 +10,6 @@
 
 (add-hook 'emacs-startup-hook #'mb/display-startup-time)
 
-(require 'use-package)
-(setq use-package-always-ensure t)
-
 ;; Initialize package sources
 
 (require 'package)
@@ -28,6 +25,9 @@
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
 
 (use-package auto-package-update
   :custom
@@ -47,7 +47,11 @@
 ;; no-littering doesn't set this by default so we must place
 ;; auto save files in the same path as it uses for sessions
 (setq auto-save-file-name-transforms
-      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+`((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
 
 (setq inhibit-startup-message t)
 
@@ -63,7 +67,7 @@
 
 (delete-selection-mode t)
 
-(setq tab-width 4 indent-tabs-mode 1)
+(setq tab-width 2 indent-tabs-mode 1)
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
@@ -76,6 +80,8 @@
 		eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+(setq-default tab-width 2)
+
 ;; Make ESC quit prompt
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -86,10 +92,19 @@
   (general-create-definer mb/leader-keys
 	:prefix "C-c"
 	:global-prefix "C-c")
+  (defun find-emacs-org () (interactive) (find-file (expand-file-name "~/.f/emacs/Emacs.org")))
+  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/")))
+  (defun find-notes () (interactive) (find-file (expand-file-name "~/notes.org")))
   (mb/leader-keys
 	;"tt" '(counsel-load-theme :which-key "choose theme")
-	"fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))
-	"m" 'imenu))
+	"a" 'org-agenda
+	"fe" 'find-emacs-org
+	"fp" 'find-projects
+	"fn" 'find-notes
+	"fr" 'recentf-open-files
+	"m" 'imenu
+	"i" 'ispell
+	"g" 'magit-status))
 
 ;(use-package evil
 ;  :init
@@ -135,12 +150,12 @@
   :bind (("C-s" . swiper)
 	 :map ivy-minibuffer-map
 	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
+	 ;("C-l" . ivy-alt-done)
 	 ("C-j" . ivy-next-line)
 	 ("C-k" . ivy-previous-line)
 	 :map ivy-switch-buffer-map
 	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
+	 ("C-l" . ivy-immediate-done)
 	 ("C-d" . ivy-switch-buffer-kill)
 	 :map ivy-reverse-i-search-map
 	 ("C-k" . ivy-previous-line)
@@ -192,7 +207,7 @@
   ("f" nil "finished" :exit t))
 
 (mb/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
+  "xs" '(hydra-text-scale/body :which-key "scale text"))
 
 (use-package dired
   :ensure nil
@@ -200,6 +215,8 @@
   :bind (("C-x C-j" . dired-jump))
   :custom ((dired-listing-switches "-agho --group-directories-first"))
   :config
+  (setq ls-lisp-use-insert-directory-program nil)
+  (require 'ls-lisp)
   ;(evil-collection-define-key 'normal 'dired-mode-map
   ;	"h" 'dired-single-up-directory
   ;	"l" 'dired-single-buffer)
@@ -223,6 +240,134 @@
 ;  :config
 ;  (evil-collection-define-key 'normal 'dired-mode-map
 ;	"H" 'dired-hide-dotfiles-mode))
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+          treemacs-deferred-git-apply-delay        0.5
+          treemacs-directory-name-transformer      #'identity
+          treemacs-display-in-side-window          t
+          treemacs-eldoc-display                   'simple
+          treemacs-file-event-delay                2000
+          treemacs-file-extension-regex            treemacs-last-period-regex-value
+          treemacs-file-follow-delay               0.2
+          treemacs-file-name-transformer           #'identity
+          treemacs-follow-after-init               t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-git-command-pipe                ""
+          treemacs-goto-tag-strategy               'refetch-index
+          treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+          treemacs-hide-dot-git-directory          nil
+          treemacs-indentation                     1
+          treemacs-indentation-string              " "
+          treemacs-is-never-other-window           nil
+          treemacs-max-git-entries                 5000
+          treemacs-missing-project-action          'ask
+          treemacs-move-forward-on-expand          nil
+          treemacs-no-png-images                   nil
+          treemacs-no-delete-other-windows         t
+          treemacs-project-follow-cleanup          nil
+          treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-position                        'left
+          treemacs-read-string-input               'from-child-frame
+          treemacs-recenter-distance               0.1
+          treemacs-recenter-after-file-follow      nil
+          treemacs-recenter-after-tag-follow       nil
+          treemacs-recenter-after-project-jump     'always
+          treemacs-recenter-after-project-expand   'on-distance
+          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+          treemacs-project-follow-into-home        nil
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               t
+          treemacs-silent-filewatch                nil
+          treemacs-silent-refresh                  nil
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-tag-follow-delay                1.5
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           nil
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           35
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    (treemacs-resize-icons 14)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-indent-guide-mode t)
+    (treemacs-fringe-indicator-mode 'always)
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
+
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t d"   . treemacs-select-directory)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+;; (use-package treemacs-evil
+;;   :after (treemacs evil)
+;;   :ensure t)
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+;; (use-package treemacs-icons-dired
+;;   :hook (dired-mode . treemacs-icons-dired-enable-once)
+;;   :ensure t)
+
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+
+;; (use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
+;;   :after (treemacs persp-mode) ;;or perspective vs. persp-mode
+;;   :ensure t
+;;   :config (treemacs-set-scope-type 'Perspectives))
+
+;; (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+;;   :after (treemacs)
+;;   :ensure t
+;;   :config (treemacs-set-scope-type 'Tabs))
+
+(flyspell-mode)
+
+(use-package multiple-cursors
+  :defer t
+  :init
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+  :config)
 
 (defun mb/org-font-setup ()
   ;; Replace list hyphen with dot
@@ -266,12 +411,33 @@
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
-  (mb/org-font-setup))
+
+  (setq calendar-week-start-day 1)
+
+  (setq org-agenda-files
+      '("~/notes.org"))
+
+  (setq org-refile-targets
+  '(("notes.org" :maxlevel . 2)))
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  (setq org-edit-src-content-indentation 0)
+
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+  (setq org-duration-format (quote h:mm))
+
+  )
+
+;; (use-package org-clock-budget
+;;   :after org)
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((emacs-lisp . t)))
+'org-babel-load-languages
+'((emacs-lisp . t)))
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
@@ -280,6 +446,7 @@
   (require 'org-tempo)
 
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("md" . "src markdown"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
 ;; Automatically tangle our Emacs.org config file when we save it
@@ -288,21 +455,25 @@
 
     ;; Dynamic scoping to the rescue
     (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
+(org-babel-tangle))))
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'mb/org-babel-tangle-config)))
 
 (defun mb/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (setq lsp-enable-file-watchers nil)
   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :hook (lsp-mode . mb/lsp-mode-setup)
   :init
-  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  (global-unset-key (kbd "M-l"))
+  (setq lsp-keymap-prefix "M-l")  ;; Or 'C-l', 's-l'
   :config
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+  (add-hook 'before-save-hook 'lsp-organize-imports)
+  (lsp-modeline-diagnostics-mode nil))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
@@ -347,19 +518,64 @@ there's a region, all lines that region covers will be duplicated."
 	(exchange-point-and-mark))
     (setq end (line-end-position))
     (let ((region (buffer-substring-no-properties beg end)))
-      (dotimes (i arg)
+(dotimes (i arg)
 	(goto-char end)
 	(newline)
 	(insert region)
 	(setq end (point)))
-      (goto-char (+ origin (* (length region) arg) arg)))))
+(goto-char (+ origin (* (length region) arg) arg)))))
 
 (general-define-key "C-c d" 'duplicate-current-line-or-region)
 
 (use-package go-mode
   :mode "\\.go\\'"
-  :hook (go-mode . lsp-deferred)
-  :custom (add-hook 'before-save-hook 'gofmt-before-save))
+  :hook
+	(go-mode . lsp-deferred)
+  :config
+  (add-hook 'before-save-hook 'gofmt-before-save))
+
+(use-package gotest
+ 	:after go-mode
+	:config
+	(mb/leader-keys
+	"tc" 'go-test-current-test
+	"tf" 'go-test-current-file
+	"tp" 'go-test-current-project))
+
+(use-package terraform-mode
+:mode "\\.tf\\'"
+:hook (terraform-mode . lsp-deferred))
+
+(use-package yaml-mode
+	:mode ("\\.yaml\\'" "\\.yml\\'"))
+
+;  (use-package k8s-mode
+;    :mode "\\.yaml\\'")
+
+(use-package flycheck
+  :hook (prog-mode . global-flycheck-mode))
+
+(use-package flycheck-golangci-lint
+  :after (flycheck go-mode)
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)	
+  :bind (:map projectile-command-map
+	("S" . ag-project))
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (when (file-directory-p "~/go/src/")
+    (setq projectile-project-search-path '("~/go/src/")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :after projectile
+  :config (counsel-projectile-mode))
 
 (use-package magit
   :commands magit-status
@@ -372,5 +588,14 @@ there's a region, all lines that region covers will be duplicated."
 ;;(use-package forge
 ;;  :after magit)
 
+; (custom-set-variables
+;  '(markdown-command "/opt/homebrew/bin/pandoc"))
+
+(use-package ag)
+
+(use-package ob-graphql)
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
+
+(find-file "~/notes.org")

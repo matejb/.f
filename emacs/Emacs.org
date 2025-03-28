@@ -21,15 +21,6 @@
 
 * Packages
 
-** Use-package
-
-#+begin_src emacs-lisp
-
-  (require 'use-package)
-  (setq use-package-always-ensure t)
-
-#+end_src
-
 ** Config
 
 #+begin_src emacs-lisp
@@ -51,6 +42,15 @@
     (package-install 'use-package))
 
  #+end_src
+
+** Use-package
+
+#+begin_src emacs-lisp
+
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+
+#+end_src
 
 ** Updates
 
@@ -84,36 +84,48 @@
 
 #+end_src
 
+* Recent files
+
+#+begin_src emacs-lisp
+
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
+  (setq recentf-max-saved-items 25)
+
+#+end_src
+
 * General UI
 
 #+begin_src emacs-lisp
 
-  (setq inhibit-startup-message t)
+(setq inhibit-startup-message t)
 
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
-  (tool-bar-mode -1)          ; Disable the toolbar
-  (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)        ; Give some breathing room
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(set-fringe-mode 10)        ; Give some breathing room
 
-  (menu-bar-mode -1)            ; Disable the menu bar
+(menu-bar-mode -1)            ; Disable the menu bar
 
-  ;; Set up the visible bell
-  (setq visible-bell t)
+;; Set up the visible bell
+(setq visible-bell t)
 
-  (delete-selection-mode t)
+(delete-selection-mode t)
 
-  (setq tab-width 4 indent-tabs-mode 1)
+(setq tab-width 2 indent-tabs-mode 1)
 
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
+(column-number-mode)
+(global-display-line-numbers-mode t)
 
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-		  term-mode-hook
-		  shell-mode-hook
-		  treemacs-mode-hook
-		  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		shell-mode-hook
+		treemacs-mode-hook
+		eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(setq-default tab-width 2)
 
 #+end_src
 
@@ -121,43 +133,52 @@
 
 #+begin_src emacs-lisp
 
-	;; Make ESC quit prompt
-	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; Make ESC quit prompt
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-	(use-package general
-	  :demand t
-	  :config
+(use-package general
+  :demand t
+  :config
 
-	  (general-create-definer mb/leader-keys
-		:prefix "C-c"
-		:global-prefix "C-c")
-	  (mb/leader-keys
-		;"tt" '(counsel-load-theme :which-key "choose theme")
-		"fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))
-		"m" 'imenu))
+  (general-create-definer mb/leader-keys
+	:prefix "C-c"
+	:global-prefix "C-c")
+  (defun find-emacs-org () (interactive) (find-file (expand-file-name "~/.f/emacs/Emacs.org")))
+  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/")))
+  (defun find-notes () (interactive) (find-file (expand-file-name "~/notes.org")))
+  (mb/leader-keys
+	;"tt" '(counsel-load-theme :which-key "choose theme")
+	"a" 'org-agenda
+	"fe" 'find-emacs-org
+	"fp" 'find-projects
+	"fn" 'find-notes
+	"fr" 'recentf-open-files
+	"m" 'imenu
+	"i" 'ispell
+	"g" 'magit-status))
 
-	;(use-package evil
-	;  :init
-	;  (setq evil-want-integration t)
-	;  (setq evil-want-keybinding nil)
-	;  (setq evil-want-C-u-scroll t)
-	;  (setq evil-want-C-i-jump nil)
-	;  :config
-	;  (evil-mode 1)
-	;  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-	;  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+;(use-package evil
+;  :init
+;  (setq evil-want-integration t)
+;  (setq evil-want-keybinding nil)
+;  (setq evil-want-C-u-scroll t)
+;  (setq evil-want-C-i-jump nil)
+;  :config
+;  (evil-mode 1)
+;  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+;  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-	;  ;; Use visual line motions even outside of visual-line-mode buffers
-	;  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-	;  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+;  ;; Use visual line motions even outside of visual-line-mode buffers
+;  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+;  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-	;  (evil-set-initial-state 'messages-buffer-mode 'normal)
-	;  (evil-set-initial-state 'dashboard-mode 'normal)
+;  (evil-set-initial-state 'messages-buffer-mode 'normal)
+;  (evil-set-initial-state 'dashboard-mode 'normal)
 
-	;(use-package evil-collection
-	;  :after evil
-	;  :config
-	;  (evil-collection-init))
+;(use-package evil-collection
+;  :after evil
+;  :config
+;  (evil-collection-init))
 
 #+end_src
 
@@ -174,11 +195,11 @@
 
 #+begin_src emacs-lisp
 
-  (use-package all-the-icons)
+(use-package all-the-icons)
 
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
 
 #+end_src
 
@@ -203,12 +224,12 @@
     :bind (("C-s" . swiper)
 	   :map ivy-minibuffer-map
 	   ("TAB" . ivy-alt-done)
-	   ("C-l" . ivy-alt-done)
+	   ;("C-l" . ivy-alt-done)
 	   ("C-j" . ivy-next-line)
 	   ("C-k" . ivy-previous-line)
 	   :map ivy-switch-buffer-map
 	   ("C-k" . ivy-previous-line)
-	   ("C-l" . ivy-done)
+	   ("C-l" . ivy-immediate-done)
 	   ("C-d" . ivy-switch-buffer-kill)
 	   :map ivy-reverse-i-search-map
 	   ("C-k" . ivy-previous-line)
@@ -278,43 +299,191 @@
     ("f" nil "finished" :exit t))
 
   (mb/leader-keys
-    "ts" '(hydra-text-scale/body :which-key "scale text"))
+    "xs" '(hydra-text-scale/body :which-key "scale text"))
 
-#+end_src
+#+End_src
 
 * Dired
 
 #+begin_src emacs-lisp
 
-  (use-package dired
-    :ensure nil
-    :commands (dired dired-jump)
-    :bind (("C-x C-j" . dired-jump))
-    :custom ((dired-listing-switches "-agho --group-directories-first"))
-    :config
-    ;(evil-collection-define-key 'normal 'dired-mode-map
-    ;	"h" 'dired-single-up-directory
-    ;	"l" 'dired-single-buffer)
-    )
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
+  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :config
+  (setq ls-lisp-use-insert-directory-program nil)
+  (require 'ls-lisp)
+  ;(evil-collection-define-key 'normal 'dired-mode-map
+  ;	"h" 'dired-single-up-directory
+  ;	"l" 'dired-single-buffer)
+  )
 
-  (use-package dired-single
-    :commands (dired dired-jump))
+(use-package dired-single
+  :commands (dired dired-jump))
 
-  (use-package all-the-icons-dired
-    :hook (dired-mode . all-the-icons-dired-mode))
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
 
-  (use-package dired-open
-    :commands (dired dired-jump)
-    :config
-    ;; Doesn't work as expected!
-    ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
-    ) 
+(use-package dired-open
+  :commands (dired dired-jump)
+  :config
+  ;; Doesn't work as expected!
+  ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
+  ) 
 
-  ;(use-package dired-hide-dotfiles
-  ;  :hook (dired-mode . dired-hide-dotfiles-mode)
-  ;  :config
-  ;  (evil-collection-define-key 'normal 'dired-mode-map
-  ;	"H" 'dired-hide-dotfiles-mode))
+;(use-package dired-hide-dotfiles
+;  :hook (dired-mode . dired-hide-dotfiles-mode)
+;  :config
+;  (evil-collection-define-key 'normal 'dired-mode-map
+;	"H" 'dired-hide-dotfiles-mode))
+
+#+end_src
+
+* Treemacs
+
+#+begin_src emacs-lisp
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+          treemacs-deferred-git-apply-delay        0.5
+          treemacs-directory-name-transformer      #'identity
+          treemacs-display-in-side-window          t
+          treemacs-eldoc-display                   'simple
+          treemacs-file-event-delay                2000
+          treemacs-file-extension-regex            treemacs-last-period-regex-value
+          treemacs-file-follow-delay               0.2
+          treemacs-file-name-transformer           #'identity
+          treemacs-follow-after-init               t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-git-command-pipe                ""
+          treemacs-goto-tag-strategy               'refetch-index
+          treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+          treemacs-hide-dot-git-directory          nil
+          treemacs-indentation                     1
+          treemacs-indentation-string              " "
+          treemacs-is-never-other-window           nil
+          treemacs-max-git-entries                 5000
+          treemacs-missing-project-action          'ask
+          treemacs-move-forward-on-expand          nil
+          treemacs-no-png-images                   nil
+          treemacs-no-delete-other-windows         t
+          treemacs-project-follow-cleanup          nil
+          treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-position                        'left
+          treemacs-read-string-input               'from-child-frame
+          treemacs-recenter-distance               0.1
+          treemacs-recenter-after-file-follow      nil
+          treemacs-recenter-after-tag-follow       nil
+          treemacs-recenter-after-project-jump     'always
+          treemacs-recenter-after-project-expand   'on-distance
+          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+          treemacs-project-follow-into-home        nil
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               t
+          treemacs-silent-filewatch                nil
+          treemacs-silent-refresh                  nil
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-tag-follow-delay                1.5
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           nil
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           35
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    (treemacs-resize-icons 14)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-indent-guide-mode t)
+    (treemacs-fringe-indicator-mode 'always)
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
+
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t d"   . treemacs-select-directory)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+;; (use-package treemacs-evil
+;;   :after (treemacs evil)
+;;   :ensure t)
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+;; (use-package treemacs-icons-dired
+;;   :hook (dired-mode . treemacs-icons-dired-enable-once)
+;;   :ensure t)
+
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+
+;; (use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
+;;   :after (treemacs persp-mode) ;;or perspective vs. persp-mode
+;;   :ensure t
+;;   :config (treemacs-set-scope-type 'Perspectives))
+
+;; (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+;;   :after (treemacs)
+;;   :ensure t
+;;   :config (treemacs-set-scope-type 'Tabs))
+
+#+end_src
+
+* Spelling
+
+#+begin_src emacs-lisp
+
+  (flyspell-mode)
+  
+#+end_src
+
+* Multi cursor
+
+#+begin_src emacs-lisp
+
+  (use-package multiple-cursors
+    :defer t
+    :init
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    :config)
 
 #+end_src
 
@@ -371,14 +540,41 @@
 
 #+begin_src emacs-lisp
 
-  (use-package org
-    :pin org
-    :commands (org-capture org-agenda)
-    :config
-    (setq org-agenda-start-with-log-mode t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
-    (mb/org-font-setup))
+(use-package org
+  :pin org
+  :commands (org-capture org-agenda)
+  :config
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+
+  (setq calendar-week-start-day 1)
+
+  (setq org-agenda-files
+      '("~/notes.org"))
+
+  (setq org-refile-targets
+  '(("notes.org" :maxlevel . 2)))
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  (setq org-edit-src-content-indentation 0)
+
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+  (setq org-duration-format (quote h:mm))
+
+  )
+
+#+end_src
+
+** time budgets
+
+#+begin_src emacs-lisp
+
+;; (use-package org-clock-budget
+;;   :after org)
 
 #+end_src
 
@@ -404,6 +600,7 @@
     (require 'org-tempo)
 
     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+    (add-to-list 'org-structure-template-alist '("md" . "src markdown"))
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
 #+end_src
@@ -421,6 +618,7 @@
 	(org-babel-tangle))))
 
   (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'mb/org-babel-tangle-config)))
+  
 
 #+end_src
 
@@ -430,17 +628,21 @@
 
 #+begin_src emacs-lisp
 
-  (defun mb/lsp-mode-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
+(defun mb/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (setq lsp-enable-file-watchers nil)
+  (lsp-headerline-breadcrumb-mode))
 
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    :hook (lsp-mode . mb/lsp-mode-setup)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-    :config
-    (lsp-enable-which-key-integration t))
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook (lsp-mode . mb/lsp-mode-setup)
+  :init
+  (global-unset-key (kbd "M-l"))
+  (setq lsp-keymap-prefix "M-l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t)
+  (add-hook 'before-save-hook 'lsp-organize-imports)
+  (lsp-modeline-diagnostics-mode nil))
 
 #+end_src
 
@@ -530,10 +732,97 @@
 
 #+begin_src emacs-lisp
 
-  (use-package go-mode
-    :mode "\\.go\\'"
-    :hook (go-mode . lsp-deferred)
-    :custom (add-hook 'before-save-hook 'gofmt-before-save))
+(use-package go-mode
+  :mode "\\.go\\'"
+  :hook
+	(go-mode . lsp-deferred)
+  :config
+  (add-hook 'before-save-hook 'gofmt-before-save))
+
+#+End_src
+
+*** gotest
+
+#+begin_src emacs-lisp
+
+(use-package gotest
+ 	:after go-mode
+	:config
+	(mb/leader-keys
+	"tc" 'go-test-current-test
+	"tf" 'go-test-current-file
+	"tp" 'go-test-current-project))
+
+#+end_src
+
+** Terraform
+
+#+begin_src emacs-lisp
+
+(use-package terraform-mode
+:mode "\\.tf\\'"
+:hook (terraform-mode . lsp-deferred))
+
+#+end_src
+
+** YAML
+
+#+begin_src emacs-lisp
+
+(use-package yaml-mode
+	:mode ("\\.yaml\\'" "\\.yml\\'"))
+
+#+end_src
+
+** k8s
+
+#+begin_src emacs-lisp
+
+;  (use-package k8s-mode
+;    :mode "\\.yaml\\'")
+
+#+end_src
+
+** Flycheck
+
+#+begin_src emacs-lisp
+
+  (use-package flycheck
+    :hook (prog-mode . global-flycheck-mode))
+
+#+end_src
+
+*** flycheck for Go
+
+#+begin_src emacs-lisp
+
+(use-package flycheck-golangci-lint
+  :after (flycheck go-mode)
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
+#+end_src
+
+** Projectile
+
+#+begin_src emacs-lisp
+
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)	
+    :bind (:map projectile-command-map
+		("S" . ag-project))
+    :init
+    ;; NOTE: Set this to the folder where you keep your Git repos!
+    (when (file-directory-p "~/go/src/")
+      (setq projectile-project-search-path '("~/go/src/")))
+    (setq projectile-switch-project-action #'projectile-dired))
+
+  (use-package counsel-projectile
+    :after projectile
+    :config (counsel-projectile-mode))
 
 #+end_src
 
@@ -554,12 +843,46 @@
 
 #+end_src
 
-* Runtime performance
+** Markdown
+
+#+begin_src emacs-lisp
+
+; (custom-set-variables
+;  '(markdown-command "/opt/homebrew/bin/pandoc"))
+
+#+end_src
+
+** ag
+
+#+begin_src emacs-lisp
+
+  (use-package ag)
+  
+#+end_src
+
+** GraphQL
+
+#+begin_src emacs-lisp
+
+(use-package ob-graphql)
+
+#+end_src
+
+* At the end of startup
+
+** Runtime performance
 
 #+begin_src emacs-lisp
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
+
+#+end_src 
+
+** open notes
+#+begin_src emacs-lisp
+
+  (find-file "~/notes.org")
 
 #+end_src
 
