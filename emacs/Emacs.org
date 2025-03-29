@@ -672,16 +672,34 @@
 (use-package company
   :after lsp-mode
   :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-	 ("<tab>" . company-complete-selection))
-	(:map lsp-mode-map
-	 ("<tab>" . company-indent-or-complete-common))
+  ;;:bind (:map company-active-map
+	 ;;("<tab>" . company-complete-selection))
+	;;(:map lsp-mode-map
+	 ;;("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
+
+#+end_src
+
+** yasnippet
+
+#+begin_src emacs-lisp
+
+(use-package yasnippet
+	:ensure t
+	:config
+	;; (add-to-list 'company-backends '(company-yasnippet))
+	(define-key yas-minor-mode-map (kbd "M-e") yas-maybe-expand))
+
+(use-package yasnippet-snippets
+	:after yasnippet
+	:config
+	(yas-reload-all)
+	(yas-global-mode))
 
 #+end_src
 
@@ -736,7 +754,8 @@ there's a region, all lines that region covers will be duplicated."
   :hook
 	(go-mode . lsp-deferred)
   :config
-  (add-hook 'before-save-hook 'gofmt-before-save))
+  (add-hook 'before-save-hook 'gofmt-before-save)
+	(add-to-list 'yas-snippet-dirs "~/.f/emacs/private/snippets/"))
 
 #+End_src
 
