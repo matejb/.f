@@ -755,7 +755,9 @@ there's a region, all lines that region covers will be duplicated."
 	(go-mode . lsp-deferred)
   :config
   (add-hook 'before-save-hook 'gofmt-before-save)
-	(add-to-list 'yas-snippet-dirs "~/.f/emacs/private/snippets/"))
+	(electric-pair-mode t)
+	(mb/leader-keys
+	"C-r" 'go-run))
 
 #+End_src
 
