@@ -58,7 +58,7 @@
 
   (use-package auto-package-update
     :custom
-    (auto-package-update-interval 7)
+    (auto-package-update-interval 14)
     (auto-package-update-prompt-before-update t)
     (auto-package-update-hide-results t)
     :config
@@ -185,9 +185,9 @@
 * Color theme
 
 #+begin_src emacs-lisp
-  
-  (use-package doom-themes
-    :init (load-theme 'doom-palenight t))
+
+(use-package doom-themes
+  :init (load-theme 'doom-palenight t))
 
 #+end_src
 
@@ -206,50 +206,50 @@
 * Which Key
 #+begin_src emacs-lisp
 
-  (use-package which-key
-    :defer 0
-    :diminish which-key-mode
-    :config
-    (which-key-mode)
-    (setq which-key-idle-delay 1))
+(use-package which-key
+  :defer 0
+  :diminish which-key-mode
+  :config
+  (which-key-mode)
+  (setq which-key-idle-delay 1))
 
 #+end_src
 
 * Autocomplete and navigation
 
 #+begin_src emacs-lisp
-  
-  (use-package ivy
-    :diminish
-    :bind (("C-s" . swiper)
-	   :map ivy-minibuffer-map
-	   ("TAB" . ivy-alt-done)
-	   ;("C-l" . ivy-alt-done)
-	   ("C-j" . ivy-next-line)
-	   ("C-k" . ivy-previous-line)
-	   :map ivy-switch-buffer-map
-	   ("C-k" . ivy-previous-line)
-	   ("C-l" . ivy-immediate-done)
-	   ("C-d" . ivy-switch-buffer-kill)
-	   :map ivy-reverse-i-search-map
-	   ("C-k" . ivy-previous-line)
-	   ("C-d" . ivy-reverse-i-search-kill))
-    :config
-    (ivy-mode 1))
 
-  (use-package ivy-rich
-    :after ivy
-    :init
-    (ivy-rich-mode 1))
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)
+	 ;("C-l" . ivy-alt-done)
+	 ("C-j" . ivy-next-line)
+	 ("C-k" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-l" . ivy-immediate-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
 
-  (use-package counsel
-    :bind (("C-M-b" . 'counsel-switch-buffer)
-	   :map minibuffer-local-map
-	   ("C-r" . 'counsel-minibuffer-history))
-    :custom
-    (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-    :config
-    (counsel-mode 1))
+(use-package ivy-rich
+  :after ivy
+  :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (("C-M-b" . 'counsel-switch-buffer)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
+  :custom
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+  :config
+  (counsel-mode 1))
 
 #+end_src
 
@@ -257,31 +257,31 @@
 
 #+begin_src emacs-lisp
 
-  (use-package ivy-prescient
-    :after counsel
-    :custom
-    (ivy-prescient-enable-filtering nil)
-    :config
-    ;; Uncomment the following line to have sorting remembered across sessions!
-    (prescient-persist-mode 1)
-    (ivy-prescient-mode 1))
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; Uncomment the following line to have sorting remembered across sessions!
+  (prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
 
 #+end_src
 
 * Helpful
 
 #+begin_src emacs-lisp
-  
-  (use-package helpful
-    :commands (helpful-callable helpful-variable helpful-command helpful-key)
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key))
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 #+end_src
 
@@ -289,17 +289,17 @@
 
 #+begin_src emacs-lisp
 
-  (use-package hydra
-    :defer t)
+(use-package hydra
+  :defer t)
 
-  (defhydra hydra-text-scale (:timeout 4)
-    "scale text"
-    ("j" text-scale-increase "in")
-    ("k" text-scale-decrease "out")
-    ("f" nil "finished" :exit t))
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
 
-  (mb/leader-keys
-    "xs" '(hydra-text-scale/body :which-key "scale text"))
+(mb/leader-keys
+  "xs" '(hydra-text-scale/body :which-key "scale text"))
 
 #+End_src
 
@@ -467,23 +467,23 @@
 
 #+begin_src emacs-lisp
 
-  (flyspell-mode)
-  
+(flyspell-mode)
+
 #+end_src
 
 * Multi cursor
 
 #+begin_src emacs-lisp
 
-  (use-package multiple-cursors
-    :defer t
-    :init
-    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-    (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-    :config)
+(use-package multiple-cursors
+  :defer t
+  :init
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+  :config)
 
 #+end_src
 
@@ -493,35 +493,35 @@
 
 #+begin_src emacs-lisp
 
-  (defun mb/org-font-setup ()
-    ;; Replace list hyphen with dot
-    (font-lock-add-keywords 'org-mode
-			    '(("^ *\\([-]\\) "
-			       (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+(defun mb/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+			  '(("^ *\\([-]\\) "
+			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-    ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.2)
-		    (org-level-2 . 1.1)
-		    (org-level-3 . 1.05)
-		    (org-level-4 . 1.0)
-		    (org-level-5 . 1.1)
-		    (org-level-6 . 1.1)
-		    (org-level-7 . 1.1)
-		    (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+		  (org-level-2 . 1.1)
+		  (org-level-3 . 1.05)
+		  (org-level-4 . 1.0)
+		  (org-level-5 . 1.1)
+		  (org-level-6 . 1.1)
+		  (org-level-7 . 1.1)
+		  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
-    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-    (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
-    (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-    (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-    (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
+  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
 
 #+end_src
 
@@ -582,12 +582,12 @@
 
 #+begin_src emacs-lisp
 
-  (with-eval-after-load 'org
-    (org-babel-do-load-languages
-	'org-babel-load-languages
-	'((emacs-lisp . t)))
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+'org-babel-load-languages
+'((emacs-lisp . t)))
 
-    (push '("conf-unix" . conf-unix) org-src-lang-modes))
+  (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
 #+end_src
 
@@ -595,13 +595,13 @@
 
 #+begin_src emacs-lisp
 
-  (with-eval-after-load 'org
-    ;; This is needed as of Org 9.2
-    (require 'org-tempo)
+(with-eval-after-load 'org
+  ;; This is needed as of Org 9.2
+  (require 'org-tempo)
 
-    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-    (add-to-list 'org-structure-template-alist '("md" . "src markdown"))
-    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("md" . "src markdown"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
 #+end_src
 
@@ -609,16 +609,15 @@
 
 #+begin_src emacs-lisp
 
-  ;; Automatically tangle our Emacs.org config file when we save it
-  (defun mb/org-babel-tangle-config ()
-    (when (string-equal (file-name-nondirectory buffer-file-name) "Emacs.org")
+;; Automatically tangle our Emacs.org config file when we save it
+(defun mb/org-babel-tangle-config ()
+  (when (string-equal (file-name-nondirectory buffer-file-name) "Emacs.org")
 
-      ;; Dynamic scoping to the rescue
-      (let ((org-confirm-babel-evaluate nil))
-	(org-babel-tangle))))
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+(org-babel-tangle))))
 
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'mb/org-babel-tangle-config)))
-  
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'mb/org-babel-tangle-config)))
 
 #+end_src
 
@@ -650,10 +649,10 @@
 
 #+begin_src emacs-lisp
 
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom))
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
 
 #+end_src
 
@@ -661,8 +660,8 @@
 
 #+begin_src emacs-lisp
 
-  (use-package lsp-ivy
-    :after lsp)
+(use-package lsp-ivy
+  :after lsp)
 
 #+end_src
 
@@ -670,19 +669,19 @@
 
 #+begin_src emacs-lisp
 
-  (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-	   ("<tab>" . company-complete-selection))
-	  (:map lsp-mode-map
-	   ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+	 ("<tab>" . company-complete-selection))
+	(:map lsp-mode-map
+	 ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
 
-  (use-package company-box
-    :hook (company-mode . company-box-mode))
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 #+end_src
 
@@ -690,10 +689,10 @@
 
 #+begin_src emacs-lisp
 
-  (general-define-key "C-c w" 'comment-or-uncomment-region)
+(general-define-key "C-c w" 'comment-or-uncomment-region)
 
-  ;(use-package evil-nerd-commenter
-  ;  :bind ("M-;" . evilnc-comment-or-uncomment-lines))
+;(use-package evil-nerd-commenter
+;  :bind ("M-;" . evilnc-comment-or-uncomment-lines))
 
 #+end_src
 
@@ -701,31 +700,31 @@
 
 #+begin_src emacs-lisp
 
-  ;; duplicate-current-line-or-region
-  (defun duplicate-current-line-or-region (arg)
-    "Duplicates the current line or region ARG times.
+;; duplicate-current-line-or-region
+(defun duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
 
-  If there's no region, the current line will be duplicated. However, if
-  there's a region, all lines that region covers will be duplicated."
-    :defer t
-    (interactive "p")
-    (let (beg end (origin (point)))
-      (if (and mark-active (> (point) (mark)))
-	  (exchange-point-and-mark))
-      (setq beg (line-beginning-position))
-      (if mark-active
-	  (exchange-point-and-mark))
-      (setq end (line-end-position))
-      (let ((region (buffer-substring-no-properties beg end)))
-	(dotimes (i arg)
-	  (goto-char end)
-	  (newline)
-	  (insert region)
-	  (setq end (point)))
-	(goto-char (+ origin (* (length region) arg) arg)))))
+If there's no region, the current line will be duplicated. However, if
+there's a region, all lines that region covers will be duplicated."
+  :defer t
+  (interactive "p")
+  (let (beg end (origin (point)))
+    (if (and mark-active (> (point) (mark)))
+	(exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if mark-active
+	(exchange-point-and-mark))
+    (setq end (line-end-position))
+    (let ((region (buffer-substring-no-properties beg end)))
+(dotimes (i arg)
+	(goto-char end)
+	(newline)
+	(insert region)
+	(setq end (point)))
+(goto-char (+ origin (* (length region) arg) arg)))))
 
-  (general-define-key "C-c d" 'duplicate-current-line-or-region)
-  
+(general-define-key "C-c d" 'duplicate-current-line-or-region)
+
 #+end_src
 
 ** Go
@@ -749,6 +748,7 @@
  	:after go-mode
 	:config
 	(mb/leader-keys
+	"C-c" 'go-test-current-test
 	"tc" 'go-test-current-test
 	"tf" 'go-test-current-file
 	"tp" 'go-test-current-project))
@@ -787,8 +787,8 @@
 
 #+begin_src emacs-lisp
 
-  (use-package flycheck
-    :hook (prog-mode . global-flycheck-mode))
+(use-package flycheck
+  :hook (prog-mode . global-flycheck-mode))
 
 #+end_src
 
@@ -806,23 +806,23 @@
 
 #+begin_src emacs-lisp
 
-  (use-package projectile
-    :diminish projectile-mode
-    :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)	
-    :bind (:map projectile-command-map
-		("S" . ag-project))
-    :init
-    ;; NOTE: Set this to the folder where you keep your Git repos!
-    (when (file-directory-p "~/go/src/")
-      (setq projectile-project-search-path '("~/go/src/")))
-    (setq projectile-switch-project-action #'projectile-dired))
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)	
+  :bind (:map projectile-command-map
+	("S" . ag-project))
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (when (file-directory-p "~/go/src/")
+    (setq projectile-project-search-path '("~/go/src/")))
+  (setq projectile-switch-project-action #'projectile-dired))
 
-  (use-package counsel-projectile
-    :after projectile
-    :config (counsel-projectile-mode))
+(use-package counsel-projectile
+  :after projectile
+  :config (counsel-projectile-mode))
 
 #+end_src
 
@@ -830,16 +830,16 @@
 
 #+begin_src emacs-lisp
 
-  (use-package magit
-    :commands magit-status
-    :custom
-    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(use-package magit
+  :commands magit-status
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-  ;; NOTE: Make sure to configure a GitHub token before using this package!
-  ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-  ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-  ;;(use-package forge
-  ;;  :after magit)
+;; NOTE: Make sure to configure a GitHub token before using this package!
+;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+;;(use-package forge
+;;  :after magit)
 
 #+end_src
 
@@ -856,8 +856,8 @@
 
 #+begin_src emacs-lisp
 
-  (use-package ag)
-  
+(use-package ag)
+
 #+end_src
 
 ** GraphQL
@@ -874,15 +874,15 @@
 
 #+begin_src emacs-lisp
 
-  ;; Make gc pauses faster by decreasing the threshold.
-  (setq gc-cons-threshold (* 2 1000 1000))
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
 
 #+end_src 
 
 ** open notes
 #+begin_src emacs-lisp
 
-  (find-file "~/notes.org")
+(find-file "~/notes.org")
 
 #+end_src
 

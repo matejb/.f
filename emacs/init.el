@@ -31,7 +31,7 @@
 
 (use-package auto-package-update
   :custom
-  (auto-package-update-interval 7)
+  (auto-package-update-interval 14)
   (auto-package-update-prompt-before-update t)
   (auto-package-update-hide-results t)
   :config
@@ -538,6 +538,7 @@ there's a region, all lines that region covers will be duplicated."
  	:after go-mode
 	:config
 	(mb/leader-keys
+	"C-c" 'go-test-current-test
 	"tc" 'go-test-current-test
 	"tf" 'go-test-current-file
 	"tp" 'go-test-current-project))
