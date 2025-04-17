@@ -82,6 +82,8 @@
 
 (setq-default tab-width 2)
 
+(setq help-window-select t)
+
 ;; Make ESC quit prompt
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -539,6 +541,8 @@ there's a region, all lines that region covers will be duplicated."
 
 (general-define-key "C-c d" 'duplicate-current-line-or-region)
 
+(defun focus-go-output () (select-window (get-lru-window)))
+
 (use-package go-mode
   :mode "\\.go\\'"
   :hook
@@ -546,12 +550,16 @@ there's a region, all lines that region covers will be duplicated."
   :config
   (add-hook 'before-save-hook 'gofmt-before-save)
 	(electric-pair-mode t)
+	(advice-add 'go-run :after 'focus-go-output)
 	(mb/leader-keys
 	"C-r" 'go-run))
 
 (use-package gotest
  	:after go-mode
 	:config
+	(advice-add 'go-test-current-test :after 'focus-go-output)
+	(advice-add 'go-test-current-file :after 'focus-go-output)
+	(advice-add 'go-test-current-project :after 'focus-go-output)
 	(mb/leader-keys
 	"C-c" 'go-test-current-test
 	"tc" 'go-test-current-test
@@ -610,6 +618,9 @@ there's a region, all lines that region covers will be duplicated."
 (use-package ag)
 
 (use-package ob-graphql)
+
+(global-unset-key (kbd "C-x m"))
+(setq byte-compile-docstring-max-column 250)
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

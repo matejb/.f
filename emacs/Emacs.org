@@ -127,6 +127,8 @@
 
 (setq-default tab-width 2)
 
+(setq help-window-select t)
+
 #+end_src
 
 * Keybindings
@@ -749,6 +751,8 @@ there's a region, all lines that region covers will be duplicated."
 
 #+begin_src emacs-lisp
 
+(defun focus-go-output () (select-window (get-lru-window)))
+
 (use-package go-mode
   :mode "\\.go\\'"
   :hook
@@ -756,6 +760,7 @@ there's a region, all lines that region covers will be duplicated."
   :config
   (add-hook 'before-save-hook 'gofmt-before-save)
 	(electric-pair-mode t)
+	(advice-add 'go-run :after 'focus-go-output)
 	(mb/leader-keys
 	"C-r" 'go-run))
 
@@ -768,6 +773,9 @@ there's a region, all lines that region covers will be duplicated."
 (use-package gotest
  	:after go-mode
 	:config
+	(advice-add 'go-test-current-test :after 'focus-go-output)
+	(advice-add 'go-test-current-file :after 'focus-go-output)
+	(advice-add 'go-test-current-project :after 'focus-go-output)
 	(mb/leader-keys
 	"C-c" 'go-test-current-test
 	"tc" 'go-test-current-test
@@ -891,13 +899,19 @@ there's a region, all lines that region covers will be duplicated."
 
 * At the end of startup
 
+** Config at the end
+
+#+begin_src emacs-lisp
+(global-unset-key (kbd "C-x m"))
+(setq byte-compile-docstring-max-column 250)
+#+end_src
+
 ** Runtime performance
 
 #+begin_src emacs-lisp
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
-
 #+end_src 
 
 ** open notes
@@ -906,4 +920,6 @@ there's a region, all lines that region covers will be duplicated."
 (find-file "~/notes.org")
 
 #+end_src
+
+
 
