@@ -2,6 +2,6 @@
 # name: test-expected
 # key: te
 # --
-if $1 != $2 {
-   t.Errorf("expected %${3:q} got %$3", $2, $1)
+if ${1:got} != ${2:expected} {
+   t.Errorf("expected${4} %${3:q} got %$3", $2, $1)
 }$0
