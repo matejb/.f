@@ -106,7 +106,7 @@
 	:prefix "C-c"
 	:global-prefix "C-c")
   (defun find-emacs-org () (interactive) (find-file (expand-file-name "~/.f/emacs/Emacs.org")))
-  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/")))
+  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/github.com/banked")))
   (defun find-notes () (interactive) (find-file (expand-file-name "~/notes.org")))
   (mb/leader-keys
 	;"tt" '(counsel-load-theme :which-key "choose theme")
@@ -209,6 +209,12 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
+
+(use-package wgrep
+	:config
+	(setq wgrep-auto-save-buffer t))
+(use-package wgrep-ag
+	:after wgrep)
 
 (use-package hydra
   :defer t)
@@ -681,6 +687,9 @@
 (use-package protobuf-mode
 	:mode ("\\.proto'"))
 
+(use-package dockerfile-mode
+	:mode ("Dockerfile"))
+
 ;  (use-package k8s-mode
 ;    :mode "\\.yaml\\'")
 
@@ -701,8 +710,8 @@
 	("S" . ag-project))
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (when (file-directory-p "~/go/src/")
-    (setq projectile-project-search-path '("~/go/src/")))
+  (when (file-directory-p "~/src/")
+    (setq projectile-project-search-path '("~/src/")))
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -719,6 +728,11 @@
 ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
 ;;(use-package forge
 ;;  :after magit)
+
+(use-package forge
+	:init
+	(setq auth-sources '("~/.authinfo"))
+  :after magit)
 
 ; (custom-set-variables
 ;  '(markdown-command "/opt/homebrew/bin/pandoc"))
@@ -742,20 +756,17 @@
 
 (use-package aidermacs
 	:init
-	;; (setenv "OPENAI_API_BASE" "https://api.githubcopilot.com")
-	;; (setenv "OPENAI_API_KEY" 
-	;; 				(or (extract-quoted-content-from-file "/Users/matej.baco/.emacs.d/.cache/copilot-chat/github-token")
-	;; 						"not-a-token-seach-emacs-config"))
-
   :bind (("C-c l" . aidermacs-transient-menu))
   :config
   :custom
-  (aidermacs-default-chat-mode 'architect)
+  ;; (aidermacs-default-chat-mode 'architect)
   ;; (aidermacs-default-model "sonnet")
+	(setq aidermacs-auto-commits nil)
 	)
 
 (global-unset-key (kbd "C-x m"))
 (setq byte-compile-docstring-max-column 250)
+(put 'narrow-to-region 'disabled nil)
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

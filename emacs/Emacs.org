@@ -173,7 +173,7 @@
 	:prefix "C-c"
 	:global-prefix "C-c")
   (defun find-emacs-org () (interactive) (find-file (expand-file-name "~/.f/emacs/Emacs.org")))
-  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/")))
+  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/github.com/banked")))
   (defun find-notes () (interactive) (find-file (expand-file-name "~/notes.org")))
   (mb/leader-keys
 	;"tt" '(counsel-load-theme :which-key "choose theme")
@@ -311,6 +311,18 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
+
+#+end_src
+
+* wgrep
+
+#+begin_src emacs-lisp
+
+(use-package wgrep
+	:config
+	(setq wgrep-auto-save-buffer t))
+(use-package wgrep-ag
+	:after wgrep)
 
 #+end_src
 
@@ -947,6 +959,15 @@
 
 #+end_src
 
+** Docker
+
+#+begin_src emacs-lisp
+
+(use-package dockerfile-mode
+	:mode ("Dockerfile"))
+
+#+end_src
+
 ** k8s
 
 #+begin_src emacs-lisp
@@ -989,8 +1010,8 @@
 	("S" . ag-project))
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (when (file-directory-p "~/go/src/")
-    (setq projectile-project-search-path '("~/go/src/")))
+  (when (file-directory-p "~/src/")
+    (setq projectile-project-search-path '("~/src/")))
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -1013,6 +1034,18 @@
 ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
 ;;(use-package forge
 ;;  :after magit)
+
+#+end_src
+
+
+** forge
+
+#+begin_src emacs-lisp
+
+(use-package forge
+	:init
+	(setq auth-sources '("~/.authinfo"))
+  :after magit)
 
 #+end_src
 
@@ -1082,16 +1115,12 @@
 
 (use-package aidermacs
 	:init
-	;; (setenv "OPENAI_API_BASE" "https://api.githubcopilot.com")
-	;; (setenv "OPENAI_API_KEY" 
-	;; 				(or (extract-quoted-content-from-file "/Users/matej.baco/.emacs.d/.cache/copilot-chat/github-token")
-	;; 						"not-a-token-seach-emacs-config"))
-
   :bind (("C-c l" . aidermacs-transient-menu))
   :config
   :custom
-  (aidermacs-default-chat-mode 'architect)
+  ;; (aidermacs-default-chat-mode 'architect)
   ;; (aidermacs-default-model "sonnet")
+	(setq aidermacs-auto-commits nil)
 	)
   
 #+end_src
@@ -1101,8 +1130,11 @@
 ** Config at the end
 
 #+begin_src emacs-lisp
+
 (global-unset-key (kbd "C-x m"))
 (setq byte-compile-docstring-max-column 250)
+(put 'narrow-to-region 'disabled nil)
+
 #+end_src
 
 ** Runtime performance
