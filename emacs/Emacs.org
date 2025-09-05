@@ -753,6 +753,7 @@
 (use-package yasnippet-snippets
 	:after yasnippet
 	:config
+	(setq yas-snippet-dirs '("/Users/matej.baco/.f/emacs/private/snippets/" "/Users/matej.baco/.emacs.d/etc/yasnippet/snippets/"))
 	(yas-reload-all)
 	(yas-global-mode))
 
@@ -888,6 +889,26 @@
 #+begin_src emacs-lisp
 
 (general-define-key "C-c d" 'duplicate-dwim)
+
+#+end_src
+
+** json
+
+#+begin_src emacs-lisp
+
+(add-hook 'js-json-mode-hook
+          (lambda ()
+            (setq tab-width 2)
+            (setq js-indent-level 2)))
+;; 
+
+#+end_src
+
+#+begin_src emacs-lisp
+
+(use-package json
+  :config
+  (setq json-encoding-default-indentation "\t"))
 
 #+end_src
 

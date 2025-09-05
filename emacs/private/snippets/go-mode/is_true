@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: is true
-# key: ist
-# --
-is.True($1)${2: // $3}$0

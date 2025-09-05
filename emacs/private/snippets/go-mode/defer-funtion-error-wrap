@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: function error wrap
-# key: few
+# name: defer function error wrap
+# key: dfew
 # --
 defer func() {
 	if ${1:err} != nil {

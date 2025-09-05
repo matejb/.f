@@ -533,6 +533,7 @@
 (use-package yasnippet-snippets
 	:after yasnippet
 	:config
+	(setq yas-snippet-dirs '("/Users/matej.baco/.f/emacs/private/snippets/" "/Users/matej.baco/.emacs.d/etc/yasnippet/snippets/"))
 	(yas-reload-all)
 	(yas-global-mode))
 
@@ -648,6 +649,16 @@
 ;  :bind ("M-;" . evilnc-comment-or-uncomment-lines))
 
 (general-define-key "C-c d" 'duplicate-dwim)
+
+(add-hook 'js-json-mode-hook
+          (lambda ()
+            (setq tab-width 2)
+            (setq js-indent-level 2)))
+;;
+
+(use-package json
+  :config
+  (setq json-encoding-default-indentation "\t"))
 
 (defun focus-go-output () (select-window (get-lru-window)) (toggle-truncate-lines))
 

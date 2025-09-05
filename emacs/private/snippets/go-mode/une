@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: une
-# key: une
-# --
-if err != nil {
-   t.Errorf("Unexpected error %q.", err)
-}
