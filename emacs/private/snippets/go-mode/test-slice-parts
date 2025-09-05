@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test-slice-parts
+# key: tesp
+# --
+if $1[$2] != $3[$2] {
+			t.Errorf("expected %${4:$$(yas-choose-value '("v" "#v" "s" "q" "d" ".2f" "T"))} got %$4.", $3[$2], $1[$2])
+}$0

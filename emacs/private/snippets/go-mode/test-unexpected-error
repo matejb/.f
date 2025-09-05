@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test unexpected error
+# key: tue
+# --
+if ${1:err} != nil {
+   t.${3:$$(yas-choose-value '("Errorf" "Fatalf"))}("unexpected error %${2:$$(yas-choose-value '("v" "#v" "s" "q" "d" ".2f" "T"))}", %$1)
+}$0

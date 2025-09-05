@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test-expected
+# key: te
+# --
+if ${1:got} != ${2:expected} {
+   t.Errorf("expected${4} %${3:$$(yas-choose-value '("v" "#v" "s" "q" "d" ".2f" "T"))} got %$3", $2, $1)
+}$0

@@ -3,20 +3,31 @@
 
 (defun mb/display-startup-time ()
   (message "Emacs loaded in %s with %d garbage collections."
-	   (format "%.2f seconds"
-		   (float-time
-		     (time-subtract after-init-time before-init-time)))
-	   gcs-done))
+     (format "%.2f seconds"
+	     (float-time
+	       (time-subtract after-init-time before-init-time)))
+     gcs-done))
 
 (add-hook 'emacs-startup-hook #'mb/display-startup-time)
+
+(setenv "PATH" (format "%s:%s" "/Users/matej.baco/go/bin" (getenv "PATH")))
+(setq exec-path (parse-colon-path (getenv "PATH")))
+
+(defun extract-quoted-content-from-file (file-path)
+  "Extract text between double quotes from FILE-PATH and return it."
+  (when (file-exists-p file-path)
+    (with-temp-buffer
+      (insert-file-contents file-path)
+      (when (re-search-forward "\"\\([^\"]+\\)\"" nil t)
+        (match-string 1)))))
 
 ;; Initialize package sources
 
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+		   ("org" . "https://orgmode.org/elpa/")
+		   ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -95,7 +106,7 @@
 	:prefix "C-c"
 	:global-prefix "C-c")
   (defun find-emacs-org () (interactive) (find-file (expand-file-name "~/.f/emacs/Emacs.org")))
-  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/")))
+  (defun find-projects () (interactive) (find-file (expand-file-name "~/go/src/github.com/banked")))
   (defun find-notes () (interactive) (find-file (expand-file-name "~/notes.org")))
   (mb/leader-keys
 	;"tt" '(counsel-load-theme :which-key "choose theme")
@@ -132,7 +143,7 @@
 ;  (evil-collection-init))
 
 (use-package doom-themes
-  :init (load-theme 'doom-palenight t))
+  :init (load-theme 'doom-gruvbox t))
 
 (use-package all-the-icons)
 
@@ -199,6 +210,12 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
+(use-package wgrep
+	:config
+	(setq wgrep-auto-save-buffer t))
+(use-package wgrep-ag
+	:after wgrep)
+
 (use-package hydra
   :defer t)
 
@@ -224,8 +241,8 @@
   ;	"l" 'dired-single-buffer)
   )
 
-(use-package dired-single
-  :commands (dired dired-jump))
+;; (use-package dired-single
+;;   :commands (dired dired-jump))
 
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
@@ -461,6 +478,13 @@
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'mb/org-babel-tangle-config)))
 
+;; (use-package treesit-auto
+;;   :custom
+;;   (treesit-auto-install 'prompt)
+;;   :config
+;;   (treesit-auto-add-to-auto-mode-alist 'all)
+;;   (global-treesit-auto-mode))
+
 (defun mb/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (setq lsp-enable-file-watchers nil)
@@ -473,6 +497,7 @@
   (global-unset-key (kbd "M-l"))
   (setq lsp-keymap-prefix "M-l")  ;; Or 'C-l', 's-l'
   :config
+	(setq lsp-go-env '((GOFLAGS . "-tags=integration_tests")))
   (lsp-enable-which-key-integration t)
   (add-hook 'before-save-hook 'lsp-organize-imports)
   (lsp-modeline-diagnostics-mode nil))
@@ -508,46 +533,141 @@
 (use-package yasnippet-snippets
 	:after yasnippet
 	:config
+	(setq yas-snippet-dirs '("/Users/matej.baco/.f/emacs/private/snippets/" "/Users/matej.baco/.emacs.d/etc/yasnippet/snippets/"))
 	(yas-reload-all)
 	(yas-global-mode))
+
+(use-package dape
+  :preface
+  ;; By default dape shares the same keybinding prefix as `gud'
+  ;; If you do not want to use any prefix, set it to nil.
+  ;; (setq dape-key-prefix "\C-x\C-a")
+
+  :hook
+  ;; Save breakpoints on quit
+  (kill-emacs . dape-breakpoint-save)
+  ;; Load breakpoints on startup
+  (after-init . dape-breakpoint-load)
+	(gotest . dape-breakpoint-global-mode)
+  (gotest . (lambda()
+              (interactive)
+              (if (string-suffix-p "_test.go"  (buffer-name))
+                  (setq-local dape-command '(delve-unit-test)))))
+	
+	:after go-mode
+
+	:autoload (dape dape-stop dape-restart dape-breakpoint-toggle dape-next dape-step-in dape-step-out)
+
+
+	:custom
+	(dape-info-buffer-window-groups '((dape-info-scope-mode)(dape-info-breakpoints-mode)))
+
+  :config
+  ;; Turn on global bindings for setting breakpoints with mouse
+  ;; (dape-breakpoint-global-mode)
+
+  ;; Info buffers to the right
+  ;; (setq dape-buffer-window-arrangement 'right)
+
+  ;; Info buffers like gud (gdb-mi)
+  ;; (setq dape-buffer-window-arrangement 'gud)
+  ;; (setq dape-info-hide-mode-line nil)
+
+  ;; Pulse source line (performance hit)
+  ;; (add-hook 'dape-display-source-hook 'pulse-momentary-highlight-one-line)
+
+  ;; Showing inlay hints
+  ;; (setq dape-inlay-hints t)
+
+  ;; Save buffers on startup, useful for interpreted languages
+  ;; (add-hook 'dape-start-hook (lambda () (save-some-buffers t t)))
+
+  ;; Kill compile buffer on build success
+  ;; (add-hook 'dape-compile-hook 'kill-buffer)
+
+  ;; Projectile users
+  ;; (setq dape-cwd-function 'projectile-project-root)
+
+	(defun mb-dape-go-test-at-point ()
+    (interactive)
+    (dape (dape--config-eval-1
+           `(modes (go-mode gotest)
+                   ensure dape-ensure-command
+                   fn dape-config-autoport
+                   command "dlv"
+                   command-args ("dap" "--listen" "127.0.0.1::autoport")
+                   command-cwd dape-cwd-fn
+                   port :autoport
+                   :type "debug"
+                   :request "launch"
+                   :mode "test"
+                   :cwd dape-cwd-fn
+                   :program (lambda () (concat "./" (file-relative-name default-directory (funcall dape-cwd-fn))))
+                   :args (lambda ()
+													 (`["-tags", "integration_tests"])
+                           (when-let* ((test-name (go-test--get-current-test)))
+                             (if test-name `["-test.run" ,test-name]
+                               (error "No test selected"))))))))
+	(mb/leader-keys
+		"td" 'mb-dape-go-test-at-point)
+
+
+	(add-to-list 'dape-configs
+               `(go-debug-main
+                 modes (go-mode gotest)
+                 command "dlv"
+                 command-args ("dap" "--listen" "127.0.0.1::autoport")
+                 command-cwd dape-command-cwd
+                 port :autoport
+                 :type "debug"
+                 :request "launch"
+                 :name "Debug Go Program"
+                 :cwd "."
+                 :program "."
+                 :args [])
+							 `(go-test
+								 modes (go-mode gotest)
+								 command "dlv"
+								 command-args ("dap" "--listen" "127.0.0.1:55878")
+								 command-cwd dape-command-cwd
+								 host "127.0.0.1"
+								 port 55878
+								 :request "launch"
+								 :mode "test"
+								 :type "go"
+								 :program "."))
+)
+
+;; ;; Enable repeat mode for more ergonomic `dape' use
+;; (use-package repeat
+;;   :config
+;;   (repeat-mode))
 
 (general-define-key "C-c w" 'comment-or-uncomment-region)
 
 ;(use-package evil-nerd-commenter
 ;  :bind ("M-;" . evilnc-comment-or-uncomment-lines))
 
-;; duplicate-current-line-or-region
-(defun duplicate-current-line-or-region (arg)
-  "Duplicates the current line or region ARG times.
+(general-define-key "C-c d" 'duplicate-dwim)
 
-If there's no region, the current line will be duplicated. However, if
-there's a region, all lines that region covers will be duplicated."
-  :defer t
-  (interactive "p")
-  (let (beg end (origin (point)))
-    (if (and mark-active (> (point) (mark)))
-	(exchange-point-and-mark))
-    (setq beg (line-beginning-position))
-    (if mark-active
-	(exchange-point-and-mark))
-    (setq end (line-end-position))
-    (let ((region (buffer-substring-no-properties beg end)))
-(dotimes (i arg)
-	(goto-char end)
-	(newline)
-	(insert region)
-	(setq end (point)))
-(goto-char (+ origin (* (length region) arg) arg)))))
+(add-hook 'js-json-mode-hook
+          (lambda ()
+            (setq tab-width 2)
+            (setq js-indent-level 2)))
+;;
 
-(general-define-key "C-c d" 'duplicate-current-line-or-region)
+(use-package json
+  :config
+  (setq json-encoding-default-indentation "\t"))
 
-(defun focus-go-output () (select-window (get-lru-window)))
+(defun focus-go-output () (select-window (get-lru-window)) (toggle-truncate-lines))
 
 (use-package go-mode
   :mode "\\.go\\'"
   :hook
 	(go-mode . lsp-deferred)
   :config
+	(setq lsp-clients-go-executable "/Users/matej.baco/go/bin/gopls")
   (add-hook 'before-save-hook 'gofmt-before-save)
 	(electric-pair-mode t)
 	(advice-add 'go-run :after 'focus-go-output)
@@ -555,8 +675,10 @@ there's a region, all lines that region covers will be duplicated."
 	"C-r" 'go-run))
 
 (use-package gotest
- 	:after go-mode
+	:after go-mode
 	:config
+	(defun mb-go-test-add-integration-build-tag (test-suite test-name) (s-concat "-tags=integration_tests"))
+	(setq go-test-additional-arguments-function 'mb-go-test-add-integration-build-tag)
 	(advice-add 'go-test-current-test :after 'focus-go-output)
 	(advice-add 'go-test-current-file :after 'focus-go-output)
 	(advice-add 'go-test-current-project :after 'focus-go-output)
@@ -572,6 +694,12 @@ there's a region, all lines that region covers will be duplicated."
 
 (use-package yaml-mode
 	:mode ("\\.yaml\\'" "\\.yml\\'"))
+
+(use-package protobuf-mode
+	:mode ("\\.proto'"))
+
+(use-package dockerfile-mode
+	:mode ("Dockerfile"))
 
 ;  (use-package k8s-mode
 ;    :mode "\\.yaml\\'")
@@ -593,8 +721,8 @@ there's a region, all lines that region covers will be duplicated."
 	("S" . ag-project))
   :init
   ;; NOTE: Set this to the folder where you keep your Git repos!
-  (when (file-directory-p "~/go/src/")
-    (setq projectile-project-search-path '("~/go/src/")))
+  (when (file-directory-p "~/src/")
+    (setq projectile-project-search-path '("~/src/")))
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -612,6 +740,11 @@ there's a region, all lines that region covers will be duplicated."
 ;;(use-package forge
 ;;  :after magit)
 
+(use-package forge
+	:init
+	(setq auth-sources '("~/.authinfo"))
+  :after magit)
+
 ; (custom-set-variables
 ;  '(markdown-command "/opt/homebrew/bin/pandoc"))
 
@@ -619,8 +752,32 @@ there's a region, all lines that region covers will be duplicated."
 
 (use-package ob-graphql)
 
+(defun mb/ansi-color-apply-on-region (begin end)
+  (interactive "r")
+  (ansi-color-apply-on-region begin end t))
+
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+(use-package gptel
+:config
+  (setq
+    gptel-model 'claude-3.7-sonnet
+    gptel-backend (gptel-make-gh-copilot "Copilot")))
+
+(use-package aidermacs
+	:init
+  :bind (("C-c l" . aidermacs-transient-menu))
+  :config
+  :custom
+  ;; (aidermacs-default-chat-mode 'architect)
+  ;; (aidermacs-default-model "sonnet")
+	(setq aidermacs-auto-commits nil)
+	)
+
 (global-unset-key (kbd "C-x m"))
 (setq byte-compile-docstring-max-column 250)
+(put 'narrow-to-region 'disabled nil)
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

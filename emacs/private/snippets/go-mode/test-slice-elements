@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test-slice-elements
+# key: tese
+# --
+if $1[${2:i}].$3 != $4[$2].$3 {
+   t.Errorf("expected %${5:$$(yas-choose-value '("v" "#v" "s" "q" "d" ".2f" "T"))} got %$5.", $4[$2].$3, $1[$2].$3)
+}$0
