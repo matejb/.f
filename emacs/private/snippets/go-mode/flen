@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: for-length
+# name: for i := 0; i < len(s); i++
 # key: flen
 # --
 for $1 := 0; $1 < len($2); $1++ {
-    $0
+	$0
 }

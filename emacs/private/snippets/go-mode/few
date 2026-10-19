@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: function error wrap
+# name: defer: wrap returned error
 # key: few
 # --
 defer func() {

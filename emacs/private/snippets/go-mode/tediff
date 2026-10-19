@@ -1,8 +1,7 @@
 # -*- mode: snippet -*-
-# name: test expected diff
+# name: test: cmp.Diff want/got
 # key: tediff
 # --
-if diff := pretty.Compare($1, $2); diff != "" {
-	t.Errorf("$3diff: (-got +want)\n%s", $4diff)
-}
-$0
+if diff := cmp.Diff(${1:want}, ${2:got}); diff != "" {
+	t.Errorf("${3:result} mismatch (-want +got):\n%s", diff)
+}$0

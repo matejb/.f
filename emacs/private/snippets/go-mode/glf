@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: go-lambda-function
+# name: go func literal (goroutine)
 # key: glf
 # --
 go func($1) {
-   $0
+	$0
 }($2)

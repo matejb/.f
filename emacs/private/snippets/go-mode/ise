@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: is.Equal
+# name: is.Equal(a, b)
 # key: ise
 # --
 is.Equal($1, $2)${3: // $4}$0

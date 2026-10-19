@@ -1,17 +1,24 @@
+;;; init.el --- Personal config, tangled from Emacs.org -*- lexical-binding: t -*-
+
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
 (defun mb/display-startup-time ()
   (message "Emacs loaded in %s with %d garbage collections."
-     (format "%.2f seconds"
-	     (float-time
-	       (time-subtract after-init-time before-init-time)))
-     gcs-done))
+	     (format "%.2f seconds"
+		     (float-time
+		       (time-subtract after-init-time before-init-time)))
+	     gcs-done))
 
 (add-hook 'emacs-startup-hook #'mb/display-startup-time)
 
-(setenv "PATH" (format "%s:%s" "/home/matej/go/bin" (getenv "PATH")))
-(setq exec-path (parse-colon-path (getenv "PATH")))
+;; GUI Emacs started from the launcher doesn't inherit the shell PATH,
+;; so add mise shims. go, gopls, goimports, golangci-lint and dlv are all
+;; mise-managed tools (~/.config/mise/config.toml), so they survive go upgrades.
+(let ((dir (expand-file-name "~/.local/share/mise/shims")))
+  (when (file-directory-p dir)
+    (setenv "PATH" (concat dir ":" (getenv "PATH")))))
+(setq exec-path (append (parse-colon-path (getenv "PATH")) (list exec-directory)))
 (setq make-backup-files nil)
 
 (defun extract-quoted-content-from-file (file-path)
@@ -27,8 +34,7 @@
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-		   ("org" . "https://orgmode.org/elpa/")
-		   ("elpa" . "https://elpa.gnu.org/packages/")))
+			   ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -59,7 +65,7 @@
 ;; no-littering doesn't set this by default so we must place
 ;; auto save files in the same path as it uses for sessions
 (setq auto-save-file-name-transforms
-`((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
@@ -67,12 +73,9 @@
 
 (setq inhibit-startup-message t)
 
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
+;; Menu, tool and scroll bars are disabled by Omarchy's omarchy.el
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
-
-(menu-bar-mode -1)            ; Disable the menu bar
 
 ;; Set up the visible bell
 (setq visible-bell t)
@@ -143,16 +146,20 @@
 ;  :config
 ;  (evil-collection-init))
 
-(use-package doom-themes
-  :init (load-theme 'doom-gruvbox t))
+;; The theme is applied and kept in sync with the system theme by
+;; Omarchy's omarchy.el (loaded from ~/.config/emacs/init.el).
+;; (use-package doom-themes
+;;   :init (load-theme 'doom-gruvbox t))
 
-(use-package all-the-icons)
+;; Uses the installed JetBrainsMono Nerd Font, no extra font install needed
+(use-package nerd-icons)
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
 (use-package which-key
+  :ensure nil ; built in since Emacs 30
   :defer 0
   :diminish which-key-mode
   :config
@@ -178,7 +185,7 @@
   (ivy-mode 1))
 
 (use-package ivy-rich
-  :after ivy
+  :after (ivy counsel)
   :init
   (ivy-rich-mode 1))
 
@@ -279,8 +286,6 @@
   :bind (("C-x C-j" . dired-jump))
   :custom ((dired-listing-switches "-agho --group-directories-first"))
   :config
-  (setq ls-lisp-use-insert-directory-program nil)
-  (require 'ls-lisp)
   ;(evil-collection-define-key 'normal 'dired-mode-map
   ;	"h" 'dired-single-up-directory
   ;	"l" 'dired-single-buffer)
@@ -289,8 +294,8 @@
 ;; (use-package dired-single
 ;;   :commands (dired dired-jump))
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
 
 (use-package dired-open
   :commands (dired dired-jump)
@@ -421,7 +426,15 @@
 ;;   :ensure t
 ;;   :config (treemacs-set-scope-type 'Tabs))
 
-(flyspell-mode)
+(setq ispell-program-name "hunspell"
+      ispell-dictionary "en_GB")
+
+;; Only enable when the dictionary is installed (pacman -S hunspell-en_gb),
+;; otherwise flyspell errors in every buffer.
+(when (and (executable-find ispell-program-name)
+           (file-exists-p (format "/usr/share/hunspell/%s.aff" ispell-dictionary)))
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
 (use-package multiple-cursors
   :defer t
@@ -433,43 +446,12 @@
   (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
   :config)
 
-(defun mb/org-font-setup ()
-  ;; Replace list hyphen with dot
-  (font-lock-add-keywords 'org-mode
-			  '(("^ *\\([-]\\) "
-			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-  ;; Set faces for heading levels
-  (dolist (face '((org-level-1 . 1.2)
-		  (org-level-2 . 1.1)
-		  (org-level-3 . 1.05)
-		  (org-level-4 . 1.0)
-		  (org-level-5 . 1.1)
-		  (org-level-6 . 1.1)
-		  (org-level-7 . 1.1)
-		  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
-
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
-
 ;   (use-package org-bullets
 ;     :hook (org-mode . org-bullets-mode)
 ;     :custom
 ;     (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (use-package org
-  :pin org
   :commands (org-capture org-agenda)
   :config
   (setq org-agenda-start-with-log-mode t)
@@ -531,8 +513,6 @@
 ;;   (global-treesit-auto-mode))
 
 (defun mb/lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (setq lsp-enable-file-watchers nil)
   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
@@ -540,11 +520,14 @@
   :hook (lsp-mode . mb/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-l")
+  :custom
+  (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-enable-file-watchers nil)
+  (lsp-go-analyses '((unusedparams . t) (unusedwrite . t) (nilness . t)))
   :config
 	(setq lsp-go-env '((GOFLAGS . "-tags=integration_tests")))
   (define-key lsp-mode-map (kbd "C-l") lsp-command-map)
   (lsp-enable-which-key-integration t)
-  (add-hook 'before-save-hook 'lsp-organize-imports)
   (lsp-modeline-diagnostics-mode nil))
 
 (use-package lsp-ui
@@ -553,7 +536,7 @@
   (lsp-ui-doc-position 'bottom))
 
 (use-package lsp-ivy
-  :after lsp)
+  :after lsp-mode)
 
 (use-package company
   :after lsp-mode
@@ -570,17 +553,32 @@
   :hook (company-mode . company-box-mode))
 
 (use-package yasnippet
-	:ensure t
+	:custom
+	;; Private snippets come first: `yas-new-snippet' saves there, and they
+	;; override bundled snippets with the same name.
+	(yas-snippet-dirs (list (expand-file-name "~/.f/emacs/private/snippets/")))
 	:config
-	;; (add-to-list 'company-backends '(company-yasnippet))
-	(define-key yas-minor-mode-map (kbd "M-e") yas-maybe-expand))
+	(define-key yas-minor-mode-map (kbd "M-e") yas-maybe-expand)
+	;; `yas-insert-snippet' lists only snippet names; show the key too.
+	(defun mb/yas-prompt-with-key (prompt choices &optional _display-fn)
+		(when (yas--template-p (car choices))
+			(let ((cands (mapcar (lambda (tpl)
+									(cons (format "%-8s %s" (or (yas--template-key tpl) "")
+												  (yas--template-name tpl))
+										  tpl))
+								  choices)))
+				(cdr (assoc (completing-read prompt cands nil t) cands)))))
+	(add-to-list 'yas-prompt-functions #'mb/yas-prompt-with-key)
+	(yas-global-mode 1))
 
+;; Appends its own snippet dir to `yas-snippet-dirs' when loaded.
 (use-package yasnippet-snippets
-	:after yasnippet
-	:config
-	(setq yas-snippet-dirs '("/home/matej/.f/emacs/private/snippets/" "/home/matej/.emacs.d/etc/yasnippet/snippets/"))
-	(yas-reload-all)
-	(yas-global-mode))
+	:after yasnippet)
+
+;; Offer snippets in the completion popup next to LSP candidates.
+(add-hook 'lsp-completion-mode-hook
+          (lambda ()
+            (setq-local company-backends '((company-capf :with company-yasnippet)))))
 
 (use-package dape
   :preface
@@ -593,8 +591,8 @@
   (kill-emacs . dape-breakpoint-save)
   ;; Load breakpoints on startup
   (after-init . dape-breakpoint-load)
-	(gotest . dape-breakpoint-global-mode)
-  (gotest . (lambda()
+	(go-mode . dape-breakpoint-global-mode)
+  (go-mode . (lambda()
               (interactive)
               (if (string-suffix-p "_test.go"  (buffer-name))
                   (setq-local dape-command '(delve-unit-test)))))
@@ -648,11 +646,11 @@
                    :mode "test"
                    :cwd dape-cwd-fn
                    :program (lambda () (concat "./" (file-relative-name default-directory (funcall dape-cwd-fn))))
+                   :buildFlags "-tags=integration_tests"
                    :args (lambda ()
-													 (`["-tags", "integration_tests"])
-                           (when-let* ((test-name (go-test--get-current-test)))
-                             (if test-name `["-test.run" ,test-name]
-                               (error "No test selected"))))))))
+                           (if-let* ((test-name (go-test--get-current-test)))
+                               `["-test.run" ,test-name]
+                             (error "No test selected")))))))
 	(mb/leader-keys
 		"td" 'mb-dape-go-test-at-point)
 
@@ -669,7 +667,8 @@
                  :name "Debug Go Program"
                  :cwd "."
                  :program "."
-                 :args [])
+                 :args []))
+	(add-to-list 'dape-configs
 							 `(go-test
 								 modes (go-mode gotest)
 								 command "dlv"
@@ -706,14 +705,23 @@
 
 (defun focus-go-output () (select-window (get-lru-window)) (toggle-truncate-lines))
 
+(defun mb/go-lsp-save-hooks ()
+  "Format and organize imports via gopls on save (buffer-local)."
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+(electric-pair-mode t)
+
 (use-package go-mode
   :mode "\\.go\\'"
   :hook
 	(go-mode . lsp-deferred)
+	(lsp-mode . (lambda () (when (derived-mode-p 'go-mode) (mb/go-lsp-save-hooks))))
+  :custom
+	;; Fallback for `gofmt' / `gofmt-before-save' when LSP is not running.
+	(gofmt-command "goimports")
   :config
-	(setq lsp-clients-go-executable "/Users/matej.baco/go/bin/gopls")
-  (add-hook 'before-save-hook 'gofmt-before-save)
-	(electric-pair-mode t)
+	;; gopls is found on exec-path (mise shims)
 	(advice-add 'go-run :after 'focus-go-output)
 	(mb/leader-keys
 	"C-r" 'go-run))
@@ -821,8 +829,8 @@ Returns a list of strings where spaces are replaced by underscores."
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
+  :hook (typescript-mode . (lambda () (setq-local indent-tabs-mode nil)))
   :config
-  (setq indent-tabs-mode nil)
   (setq typescript-indent-level 2))
 
 (use-package terraform-mode
@@ -831,13 +839,11 @@ Returns a list of strings where spaces are replaced by underscores."
 
 (use-package yaml-mode
 	:mode ("\\.yaml\\'" "\\.yml\\'")
-  :config
-  (setq indent-tabs-mode nil))
+  :hook (yaml-mode . (lambda () (setq-local indent-tabs-mode nil))))
 
 (use-package protobuf-mode
-	:mode ("\\.proto'")
-  :config
-  (setq indent-tabs-mode nil))
+	:mode ("\\.proto\\'")
+  :hook (protobuf-mode . (lambda () (setq-local indent-tabs-mode nil))))
 
 (use-package dockerfile-mode
 	:mode ("Dockerfile"))
@@ -846,11 +852,28 @@ Returns a list of strings where spaces are replaced by underscores."
 ;    :mode "\\.yaml\\'")
 
 (use-package flycheck
-  :hook (prog-mode . global-flycheck-mode))
+  :init (global-flycheck-mode))
+
+(defun mb/golangci-lint-build-tags (command)
+  "Pass the same build tags gopls uses (see `lsp-go-env') to golangci-lint."
+  (if (string-match-p "golangci-lint\\'" (car command))
+      (append (list (car command) (cadr command) "--build-tags=integration_tests")
+              (cddr command))
+    command))
 
 (use-package flycheck-golangci-lint
   :after (flycheck go-mode)
-  :hook (go-mode . flycheck-golangci-lint-setup))
+  :hook (go-mode . flycheck-golangci-lint-setup)
+  :config
+  (setq flycheck-command-wrapper-function #'mb/golangci-lint-build-tags))
+
+;; lsp-mode replaces the buffer's checker with `lsp'; chain golangci-lint after it
+;; so both gopls diagnostics and lint results show up.
+(add-hook 'lsp-diagnostics-mode-hook
+          (lambda ()
+            (when (and (derived-mode-p 'go-mode)
+                       (not (memq 'golangci-lint (flycheck-checker-get 'lsp 'next-checkers))))
+              (flycheck-add-next-checker 'lsp 'golangci-lint))))
 
 (use-package projectile
   :diminish projectile-mode

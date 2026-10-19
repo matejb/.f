@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: test-expected
+# name: test: got != want (Errorf)
 # key: te
 # --
 if ${1:got} != ${2:expected} {
-   t.Errorf("expected${4} %${3:q} got %$3", $2, $1)
+	t.Errorf("expected${4} %${3:q} got %$3", $2, $1)
 }$0

@@ -1,6 +1,7 @@
 # -*- mode: snippet -*-
-# name: range
+# name: for range
+# key: range
 # --
 for ${1:key}${2:, ${3:value}} := range ${4:target} {
-    $0
+	$0
 }

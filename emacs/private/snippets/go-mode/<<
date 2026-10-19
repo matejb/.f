@@ -1,1 +1,5 @@
+# -*- mode: snippet -*-
+# name: append to slice
+# key: <<
+# --
 $1 = append(${1:theSlice}, ${2:theValue})$0

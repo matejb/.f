@@ -1,1 +1,5 @@
-\`json:"$1"\`
+# -*- mode: snippet -*-
+# name: json struct tag
+# key: json
+# --
+\`json:"$1"\`$0

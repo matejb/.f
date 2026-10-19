@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sort slice with slices.SortFunc
+# key: cs
+# --
+slices.SortFunc(${1:s}, func(a, b ${2:T}) int {
+	return cmp.Compare(a.$3, b.$3)
+})$0

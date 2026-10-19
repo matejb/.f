@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: custom-sort
-# key: cs
-# --
-type $1 []$2
-
-func (a $1) Len() int           { return len(a) }
-func (a $1) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a $1) Less(i, j int) bool { return a[i].$3 < a[j].$3 }$0

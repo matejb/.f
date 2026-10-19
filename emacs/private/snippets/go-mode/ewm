@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: error with message
+# name: wrap error with fmt.Errorf %w
 # key: ewm
 # --
 fmt.Errorf("$2: %w", ${1:err})$0

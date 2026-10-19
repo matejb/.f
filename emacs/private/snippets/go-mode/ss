@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: slice of strings
+# name: []string
 # key: ss
 # --
 []string

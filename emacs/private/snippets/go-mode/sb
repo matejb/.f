@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: byte slice
+# name: []byte
 # key: sb
 # --
 []byte

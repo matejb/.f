@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: is test error content
+# name: is: check error matches expected
 # key: isec
 # --
 switch {
